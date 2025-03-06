@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <tchar.h>
 #include <Windows.h>
 #include <graphics.h>
 #include <conio.h>
@@ -90,7 +91,7 @@ void mainMenu()
                           {240, 113, 310, 146},
                           {220, 166, 326, 199},
                           {240, 219, 310, 252}};
-    char text[][12] = {"登录", "注册", "排行榜", "退出"}; //记录主菜单按钮文本
+    TCHAR text[][12] = {_T("登录"), _T("注册"), _T("排行榜"), _T("退出")}; //记录主菜单按钮文本
     ExMessage mouse;
     IMAGE img;
     SIZE textsize;
@@ -184,7 +185,7 @@ void loginBox()
             }
             else if (determineMouse(action, 351, 238, 614, 284)) //输入用户名窗口
             {
-                outtextxy(351, 245, _T("|"));
+                outtextxy(351, 245, _T("|")); //测试代码，记得删除
                 while (1)
                 {
                     action = getmessage();
@@ -205,10 +206,16 @@ void loginBox()
                         if ((action.vkcode >= 'A' && action.vkcode <= 'Z') ||
                             (action.vkcode >= '0' && action.vkcode <= '9'))
                         {
-                            user_input.username[name_length] = action.vkcode;
-                            outtextxy(351 + (name_length * 30), 245, action.vkcode);
+                            solidrectangle(351, 245, 351 + textwidth(user_input.username), 245 + textheight(user_input.username));
+                            user_input.username[name_length] = tolower(action.vkcode);
+                            outtextxy(351, 245, user_input.username);
                             name_length++;
-                            // solidrectangle()
+                        }
+                        else if (action.vkcode == VK_BACK)
+                        {
+                            name_length--;
+                            solidrectangle(351, 245, 351 + textwidth(user_input.username), 245 + textheight(user_input.username));
+                            outtextxy(351, 245, user_input.username); //有问题
                         }
                     }
                 }
@@ -217,7 +224,6 @@ void loginBox()
             {
             }
         }
-        // outtextxy(351, 245, _T("|"));
     }
 }
 

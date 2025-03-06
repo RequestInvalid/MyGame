@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "locale": "cpp",
+        "xlocale": "cpp"
+    }
+}
