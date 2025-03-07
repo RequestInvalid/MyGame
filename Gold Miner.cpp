@@ -24,7 +24,7 @@ GameStatus Status = MAIN_MENU; //初始化状态机
 //用户数据结构体
 typedef struct userData
 {
-    char username[33];
+    char username[21];
     char pasport[19];
     int highest_score = 0;
     struct userData *next;
@@ -34,6 +34,7 @@ typedef struct userData
 void gameLoop();                                                               //游戏循环体，切换游戏窗口状态
 int determineMouse(ExMessage msg, int startX, int startY, int endX, int endY); //检测鼠标坐标是否在某一矩形内
 void mainMenu();                                                               //主菜单
+char *rangeChar(char *str, int start, int end);                                //返回指定范围内的字符串
 void loginBox();                                                               //设置登录框
 void registerBox();                                                            //设置注册框
 void drawUserName();                                                           //用户名输出框动画
@@ -95,7 +96,7 @@ void mainMenu()
     ExMessage mouse;
     IMAGE img;
     SIZE textsize;
-    FILE *file = fopen("log.dat", "w+");
+    // FILE *file = fopen("log.dat", "w+");//测试代码，用于输出鼠标坐标
     setbkmode(TRANSPARENT); //设置画布背景为透明
     loadimage(&img, _T("resource/startMenu.jpg"), getwidth(), getheight());
     putimage(0, 0, &img);
@@ -144,11 +145,26 @@ void mainMenu()
             }
         }
         //测试用代码，用于输出鼠标左键时鼠标坐标
-        if (mouse.message == WM_LBUTTONDOWN)
-        {
-            fprintf(file, "%d, %d\n", mouse.x, mouse.y);
-        }
+        // if (mouse.message == WM_LBUTTONDOWN)
+        // {
+        //     fprintf(file, "%d, %d\n", mouse.x, mouse.y);
+        // }
     }
+}
+
+char *rangeChar(char *str, int start, int end)
+{
+    if (end - start <= 0)
+    {
+        return "";
+    }
+    char *output = (char *)malloc(sizeof(char) * (end - start + 1));
+    for (int i = 0; i < end - start; i++)
+    {
+        output[i] = str[start + i];
+    }
+    output[end] = '\0';
+    return output;
 }
 
 void loginBox()
@@ -158,10 +174,11 @@ void loginBox()
     ExMessage action;
     userData user_input; //存储用户输入的结构体
     int name_length = 0, passport_length = 0;
+    char temp_name[21], temp_passport[19];
     FILE *file = fopen("user.dat", "ab+");
     LOGFONT login_font;
 
-    settextstyle(30, 0, _T("微软雅黑"));
+    settextstyle(30, 0, _T("Times New Roman"));
     setbkmode(TRANSPARENT);
     gettextstyle(&login_font);
     login_font.lfQuality = ANTIALIASED_QUALITY;
@@ -176,7 +193,7 @@ void loginBox()
     while (1)
     {
         action = getmessage();
-        if (action.message == WM_LBUTTONUP)
+        if (action.message == WM_LBUTTONUP) //检测鼠标按下
         {
             if (determineMouse(action, 606, 123, 637, 153)) //退出按钮
             {
@@ -203,20 +220,30 @@ void loginBox()
                     }
                     else if (action.message == WM_KEYDOWN) //判断按键按下事件
                     {
-                        if ((action.vkcode >= 'A' && action.vkcode <= 'Z') ||
-                            (action.vkcode >= '0' && action.vkcode <= '9'))
+                        solidrectangle(351, 245, 351 + textwidth(rangeChar(temp_name, 0, name_length)), 245 + textheight(rangeChar(temp_name, 0, name_length)));
+                        if (GetAsyncKeyState(VK_SHIFT))
                         {
-                            solidrectangle(351, 245, 351 + textwidth(user_input.username), 245 + textheight(user_input.username));
-                            user_input.username[name_length] = tolower(action.vkcode);
-                            outtextxy(351, 245, user_input.username);
+                            if (action.vkcode >= 'A' && action.vkcode <= 'Z' && name_length < 20)
+                            {
+                                temp_name[name_length] = action.vkcode;
+                                name_length++;
+                            }
+                        }
+                        else if (action.vkcode >= 'A' && action.vkcode <= 'Z' && name_length < 20)
+                        {
+                            temp_name[name_length] = tolower(action.vkcode);
                             name_length++;
                         }
-                        else if (action.vkcode == VK_BACK)
+                        else if (action.vkcode >= '0' && action.vkcode <= '9' && name_length < 20)
+                        {
+                            temp_name[name_length] = action.vkcode;
+                            name_length++;
+                        }
+                        else if (action.vkcode == VK_BACK && name_length > 0)
                         {
                             name_length--;
-                            solidrectangle(351, 245, 351 + textwidth(user_input.username), 245 + textheight(user_input.username));
-                            outtextxy(351, 245, user_input.username); //有问题
                         }
+                        outtextxy(351, 245, rangeChar(temp_name, 0, name_length));
                     }
                 }
             }
