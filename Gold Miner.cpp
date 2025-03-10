@@ -9,7 +9,7 @@
 #define GAME_WIDTH 960
 #define GAME_HEIGHT 540
 
-//利用枚举来创造状态机
+//利用枚举来构建状态机
 typedef enum
 {
     MAIN_MENU,
@@ -34,7 +34,7 @@ typedef struct userData
 void gameLoop();                                                               //游戏循环体，切换游戏窗口状态
 int determineMouse(ExMessage msg, int startX, int startY, int endX, int endY); //检测鼠标坐标是否在某一矩形内
 void mainMenu();                                                               //主菜单
-char *rangeChar(char *str, int start, int end);                                //返回指定范围内的字符串
+char *charInRange(char *str, int start, int end);                              //返回指定范围内的字符串
 void loginBox();                                                               //设置登录框
 void registerBox();                                                            //设置注册框
 void drawUserName();                                                           //用户名输出框动画
@@ -152,7 +152,7 @@ void mainMenu()
     }
 }
 
-char *rangeChar(char *str, int start, int end)
+char *charInRange(char *str, int start, int end)
 {
     if (end - start <= 0)
     {
@@ -175,6 +175,7 @@ void loginBox()
     userData user_input; //存储用户输入的结构体
     int name_length = 0, passport_length = 0;
     char temp_name[21], temp_passport[19];
+    char star[19] = "******************";
     FILE *file = fopen("user.dat", "ab+");
     LOGFONT login_font;
 
@@ -193,14 +194,17 @@ void loginBox()
     while (1)
     {
         action = getmessage();
-        if (action.message == WM_LBUTTONUP) //检测鼠标按下
+        /*检测鼠标按下*/
+        if (action.message == WM_LBUTTONUP)
         {
-            if (determineMouse(action, 606, 123, 637, 153)) //退出按钮
+            /*退出按钮*/
+            if (determineMouse(action, 606, 123, 637, 153))
             {
                 Status = MAIN_MENU;
                 return;
             }
-            else if (determineMouse(action, 351, 238, 614, 284)) //输入用户名窗口
+            /*输入用户名窗口*/
+            else if (determineMouse(action, 351, 238, 614, 284))
             {
                 outtextxy(351, 245, _T("|")); //测试代码，记得删除
                 while (1)
@@ -220,7 +224,7 @@ void loginBox()
                     }
                     else if (action.message == WM_KEYDOWN) //判断按键按下事件
                     {
-                        solidrectangle(351, 245, 351 + textwidth(rangeChar(temp_name, 0, name_length)), 245 + textheight(rangeChar(temp_name, 0, name_length)));
+                        solidrectangle(351, 245, 351 + textwidth(charInRange(temp_name, 0, name_length)), 245 + textheight(charInRange(temp_name, 0, name_length)));
                         if (GetAsyncKeyState(VK_SHIFT))
                         {
                             if (action.vkcode >= 'A' && action.vkcode <= 'Z' && name_length < 20)
@@ -243,12 +247,57 @@ void loginBox()
                         {
                             name_length--;
                         }
-                        outtextxy(351, 245, rangeChar(temp_name, 0, name_length));
+                        outtextxy(351, 245, charInRange(temp_name, 0, name_length));
                     }
                 }
             }
-            else if (determineMouse(action, 351, 342, 614, 387)) //输入密码窗口
+            /*输入密码窗口*/
+            else if (determineMouse(action, 351, 342, 614, 387))
             {
+                outtextxy(351, 342, _T("|")); //测试代码，记得删除
+                while (1)
+                {
+                    action = getmessage();
+                    if (action.message == WM_LBUTTONUP) //判断鼠标左键按下时的位置
+                    {
+                        if (determineMouse(action, 606, 123, 637, 153))
+                        {
+                            Status = MAIN_MENU;
+                            return;
+                        }
+                        else if (!determineMouse(action, 351, 342, 614, 387))
+                        {
+                            break;
+                        }
+                    }
+                    else if (action.message == WM_KEYDOWN) //判断按键按下事件
+                    {
+                        solidrectangle(351, 342, 351 + textwidth(charInRange(temp_passport, 0, passport_length + 1)), 342 + textheight(charInRange(temp_passport, 0, passport_length)));
+                        if (GetAsyncKeyState(VK_SHIFT))
+                        {
+                            if (action.vkcode >= 'A' && action.vkcode <= 'Z' && passport_length < 20)
+                            {
+                                temp_passport[passport_length] = action.vkcode;
+                                passport_length++;
+                            }
+                        }
+                        else if (action.vkcode >= 'A' && action.vkcode <= 'Z' && passport_length < 20)
+                        {
+                            temp_passport[passport_length] = tolower(action.vkcode);
+                            passport_length++;
+                        }
+                        else if (action.vkcode >= '0' && action.vkcode <= '9' && passport_length < 20)
+                        {
+                            temp_passport[passport_length] = action.vkcode;
+                            passport_length++;
+                        }
+                        else if (action.vkcode == VK_BACK && passport_length > 0)
+                        {
+                            passport_length--;
+                        }
+                        outtextxy(351, 342, charInRange(star, 0, passport_length));
+                    }
+                }
             }
         }
     }
