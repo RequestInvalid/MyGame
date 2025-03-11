@@ -1,5 +1,4 @@
 #include "LoginAndRegister.h"
-#include "DataOperate.h"
 
 extern GameStatus Status;
 

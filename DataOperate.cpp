@@ -33,6 +33,24 @@ userData *loadUserData()
     return head;
 }
 
+userData *searchUserData(userData *head, char *name)
+{
+    if (head == NULL)
+    {
+        return NULL;
+    }
+    userData *ptr = head;
+    while (ptr != NULL)
+    {
+        if (!strcmp(ptr->username, name))
+        {
+            return ptr;
+        }
+        ptr = ptr->next;
+    }
+    return NULL;
+}
+
 void addUserData(userData *head, userData data)
 {
     /*为内存中的链表和文件中的用户数据添加新数据*/

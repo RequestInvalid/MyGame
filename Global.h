@@ -9,6 +9,8 @@
 #define GAME_WIDTH 960
 #define GAME_HEIGHT 540
 
+#ifndef MACRO
+#define MACRO
 //利用枚举来创造状态机
 typedef enum
 {
@@ -27,6 +29,7 @@ typedef struct userData
     int highest_score = 0;
     struct userData *next;
 } userData;
+#endif
 
 /*函数声明*/
 void gameLoop();                                                               //游戏循环体，切换游戏窗口状态
