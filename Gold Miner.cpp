@@ -1,7 +1,9 @@
 #include "LoginAndRegister.h"
 #include "DataOperate.h"
+#include "GameLevel.h"
 
 GameStatus Status = MAIN_MENU; //初始化状态机
+userData *user;
 
 int main()
 {
@@ -28,6 +30,9 @@ void gameLoop()
             break;
         case REGISTER:
             registerBox();
+            break;
+        case GAME:
+            startUp();
             break;
         }
     }
@@ -58,7 +63,7 @@ void mainMenu()
     ExMessage mouse;
     IMAGE img;
     SIZE textsize;
-    // FILE *file = fopen("log.dat", "w+");//测试代码，用于输出鼠标坐标
+    // FILE *file = fopen("log.txt", "w+");//测试代码，用于输出鼠标坐标
     setbkmode(TRANSPARENT); //设置画布背景为透明
     loadimage(&img, _T("resource/startMenu.jpg"), getwidth(), getheight());
     putimage(0, 0, &img);

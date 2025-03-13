@@ -15,6 +15,7 @@
 typedef enum
 {
     MAIN_MENU,
+    GAME,
     LOGIN,
     REGISTER,
     RANK,

@@ -6,10 +6,13 @@
             "command": "C:\\Program Files\\mingw64\\bin\\g++.exe",
             "args": [
                 "-fdiagnostics-color=always",
+                "-I",
+                "include",//include文件夹找头文件
                 "-g",
                 "${file}",
-                "${fileDirname}\\LoginAndRegister.cpp",//手动添加编译文件
-                "${fileDirname}\\DataOperate.cpp",
+                "${fileDirname}\\src\\LoginAndRegister.cpp",//手动添加编译文件
+                "${fileDirname}\\src\\DataOperate.cpp",
+                "${fileDirname}\\src\\GameLevel.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "-L",

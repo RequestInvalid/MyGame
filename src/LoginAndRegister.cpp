@@ -1,6 +1,7 @@
 #include "LoginAndRegister.h"
 
 extern GameStatus Status;
+extern userData *user;
 
 typedef enum frameStatus
 {
@@ -8,6 +9,11 @@ typedef enum frameStatus
     USERNAME,
     PASSPORT,
 } frameStatus;
+
+// typedef enum warn
+// {
+
+// } warn;
 
 void loginBox()
 {
@@ -136,7 +142,8 @@ void loginBox()
                     userPtr = searchUserData(head, charInRange(temp_name, 0, name_length));
                     if (userPtr != NULL && !strcmp(userPtr->pasport, charInRange(temp_passport, 0, passport_length)))
                     {
-                        Status = MAIN_MENU; //登录成功跳转
+                        user = userPtr;
+                        Status = GAME; //登录成功跳转
                         break;
                     }
                 }
@@ -148,7 +155,7 @@ void loginBox()
 
 void registerBox()
 {
-    /*设置登录框*/
+    /*设置注册框*/
     frameStatus frame_status = NONE;
     IMAGE register_box;
     ExMessage action;
@@ -274,7 +281,7 @@ void registerBox()
                     strcpy(user_input.pasport, charInRange(temp_passport, 0, passport_length));
                     head = loadUserData();
                     addUserData(head, user_input);
-                    Status = MAIN_MENU;
+                    Status = MAIN_MENU; //注册成功切换到主菜单界面
                     break;
                 }
             }
