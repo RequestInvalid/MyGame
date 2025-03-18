@@ -65,7 +65,7 @@ void mainMenu()
     SIZE textsize;
     // FILE *file = fopen("log.txt", "w+");//测试代码，用于输出鼠标坐标
     setbkmode(TRANSPARENT); //设置画布背景为透明
-    loadimage(&img, _T("resource/startMenu.jpg"), getwidth(), getheight());
+    loadimage(&img, _T("img/startMenu.jpg"), getwidth(), getheight());
     putimage(0, 0, &img);
     LOGFONT f; //初始化字体格式
     settextstyle(35, 0, _T("楷体"));

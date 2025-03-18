@@ -11,7 +11,7 @@
 
 #ifndef MACRO
 #define MACRO
-//ÀûÓÃÃ¶¾ÙÀ´´´Ôì×´Ì¬»ú
+//ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½
 typedef enum
 {
     MAIN_MENU,
@@ -22,22 +22,22 @@ typedef enum
     EXIT,
 } GameStatus;
 
-//ÓÃ»§Êý¾Ý½á¹¹Ìå
+//ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ý½á¹¹ï¿½ï¿½
 typedef struct userData
 {
     char username[21];
     char pasport[19];
-    int highest_score = 0;
+    long int highest_score = 0;
     struct userData *next;
 } userData;
 #endif
 
-/*º¯ÊýÉùÃ÷*/
-void gameLoop();                                                               //ÓÎÏ·Ñ­»·Ìå£¬ÇÐ»»ÓÎÏ·´°¿Ú×´Ì¬
-int determineMouse(ExMessage msg, int startX, int startY, int endX, int endY); //¼ì²âÊó±ê×ø±êÊÇ·ñÔÚÄ³Ò»¾ØÐÎÄÚ
-void mainMenu();                                                               //Ö÷²Ëµ¥
-char *charInRange(char *str, int start, int end);                              //·µ»ØÖ¸¶¨·¶Î§ÄÚµÄ×Ö·û´®
-                                                                               // void loginBox();                                                               //ÉèÖÃµÇÂ¼¿ò
-                                                                               // void registerBox();                              //ÉèÖÃ×¢²á¿ò
-                                                                               // userData *loadUserData();                        //¼ÓÔØÓÃ»§Êý¾ÝÎªÁ´±í£¬·µ»ØÍ·Ö¸Õë(¿ÉÄÜ»¹ÓÐÎÊÌâ£¿)
-                                                                               // void addUserData(userData *head, userData data); //ÎªÄÚ´æÖÐµÄÁ´±íºÍÎÄ¼þÖÐµÄÓÃ»§Êý¾ÝÌí¼ÓÐÂÊý¾Ý
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
+void gameLoop();                                                               //ï¿½ï¿½Ï·Ñ­ï¿½ï¿½ï¿½å£¬ï¿½Ð»ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½×´Ì¬
+int determineMouse(ExMessage msg, int startX, int startY, int endX, int endY); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ä³Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void mainMenu();                                                               //ï¿½ï¿½ï¿½Ëµï¿½
+char *charInRange(char *str, int start, int end);                              //ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Î§ï¿½Úµï¿½ï¿½Ö·ï¿½ï¿½ï¿½
+                                                                               // void loginBox();                                                               //ï¿½ï¿½ï¿½Ãµï¿½Â¼ï¿½ï¿½
+                                                                               // void registerBox();                              //ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½
+                                                                               // userData *loadUserData();                        //ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·Ö¸ï¿½ï¿½(ï¿½ï¿½ï¿½Ü»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â£¿)
+                                                                               // void addUserData(userData *head, userData data); //Îªï¿½Ú´ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ðµï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
