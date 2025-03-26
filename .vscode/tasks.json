@@ -10,13 +10,16 @@
                 "include",//include文件夹找头文件
                 "-g",
                 "${file}",
-                "${fileDirname}\\src\\LoginAndRegister.cpp",//手动添加编译文件
+                "${fileDirname}\\src\\Global.cpp",//手动添加编译文件
+                "${fileDirname}\\src\\LoginAndRegister.cpp",
                 "${fileDirname}\\src\\DataOperate.cpp",
-                "${fileDirname}\\src\\GameLevel.cpp",
+                "${fileDirname}\\src\\GameEngine.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "-L",
                 "C:\\Program Files\\mingw64\\lib",
+                "-lgdi32",  // 需要 Windows GDI 库
+                "-lMsimg32",
                 "-leasyx",
             ],
             "options": {

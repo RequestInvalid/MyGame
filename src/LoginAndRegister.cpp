@@ -39,7 +39,7 @@ void loginBox()
 
     setfillcolor(WHITE); //设置填充框颜色
 
-    loadimage(&login_box, _T("resource/login.png"), 350, 350); //加载缩小后的登录框图片
+    loadimage(&login_box, _T("img/login.png"), 350, 350); //加载缩小后的登录框图片
     putimage(305, 95, &login_box);
     while (1)
     {

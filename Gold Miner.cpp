@@ -1,9 +1,12 @@
 #include "LoginAndRegister.h"
 #include "DataOperate.h"
-#include "GameLevel.h"
+#include "GameEngine.h"
 
 GameStatus Status = MAIN_MENU; //初始化状态机
 userData *user;
+
+void gameLoop(); //游戏循环体，切换游戏窗口状态
+void mainMenu(); //主菜单
 
 int main()
 {
@@ -32,22 +35,9 @@ void gameLoop()
             registerBox();
             break;
         case GAME:
-            startUp();
+            mainEngin();
             break;
         }
-    }
-}
-
-int determineMouse(ExMessage msg, int startX, int startY, int endX, int endY)
-{
-    /*检测鼠标坐标是否在某一矩形内*/
-    if (msg.x > startX && msg.y > startY && msg.x < endX && msg.y < endY)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
     }
 }
 
@@ -63,8 +53,7 @@ void mainMenu()
     ExMessage mouse;
     IMAGE img;
     SIZE textsize;
-    // FILE *file = fopen("log.txt", "w+");//测试代码，用于输出鼠标坐标
-    setbkmode(TRANSPARENT); //设置画布背景为透明
+    FILE *file = fopen("log.txt", "w+"); //测试代码，用于输出鼠标坐标
     loadimage(&img, _T("img/startMenu.jpg"), getwidth(), getheight());
     putimage(0, 0, &img);
     LOGFONT f; //初始化字体格式
@@ -80,7 +69,6 @@ void mainMenu()
         mouse = getmessage();
         for (int i = 0; i < 4; i++) //检测鼠标是否与文字重叠
         {
-
             if (determineMouse(mouse, location[i][0], location[i][1], location[i][2], location[i][3]))
             {
                 settextcolor(BLACK);
@@ -112,24 +100,9 @@ void mainMenu()
             }
         }
         //测试用代码，用于输出鼠标左键时鼠标坐标
-        // if (mouse.message == WM_LBUTTONDOWN)
-        // {
-        //     fprintf(file, "%d, %d\n", mouse.x, mouse.y);
-        // }
+        if (mouse.message == WM_LBUTTONDOWN)
+        {
+            fprintf(file, "%d, %d\n", mouse.x, mouse.y);
+        }
     }
-}
-
-char *charInRange(char *str, int start, int end)
-{
-    if (end - start <= 0)
-    {
-        return "";
-    }
-    char *output = (char *)malloc(sizeof(char) * (end - start + 1));
-    for (int i = 0; i < end - start; i++)
-    {
-        output[i] = str[start + i];
-    }
-    output[end] = '\0';
-    return output;
 }

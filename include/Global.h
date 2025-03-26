@@ -11,7 +11,7 @@
 
 #ifndef MACRO
 #define MACRO
-//ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½
+//ÀûÓÃÃ¶¾ÙÀ´´´Ôì×´Ì¬»ú
 typedef enum
 {
     MAIN_MENU,
@@ -22,22 +22,17 @@ typedef enum
     EXIT,
 } GameStatus;
 
-//ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ý½á¹¹ï¿½ï¿½
+//ÓÃ»§Êý¾Ý½á¹¹Ìå
 typedef struct userData
 {
     char username[21];
     char pasport[19];
-    long int highest_score = 0;
+    int highest_score = 0;
     struct userData *next;
 } userData;
 #endif
 
-/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
-void gameLoop();                                                               //ï¿½ï¿½Ï·Ñ­ï¿½ï¿½ï¿½å£¬ï¿½Ð»ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½×´Ì¬
-int determineMouse(ExMessage msg, int startX, int startY, int endX, int endY); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ä³Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-void mainMenu();                                                               //ï¿½ï¿½ï¿½Ëµï¿½
-char *charInRange(char *str, int start, int end);                              //ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Î§ï¿½Úµï¿½ï¿½Ö·ï¿½ï¿½ï¿½
-                                                                               // void loginBox();                                                               //ï¿½ï¿½ï¿½Ãµï¿½Â¼ï¿½ï¿½
-                                                                               // void registerBox();                              //ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½
-                                                                               // userData *loadUserData();                        //ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·Ö¸ï¿½ï¿½(ï¿½ï¿½ï¿½Ü»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â£¿)
-                                                                               // void addUserData(userData *head, userData data); //Îªï¿½Ú´ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ðµï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+/*º¯ÊýÉùÃ÷*/
+int determineMouse(ExMessage msg, int startX, int startY, int endX, int endY);            //¼ì²âÊó±ê×ø±êÊÇ·ñÔÚÄ³Ò»¾ØÐÎÄÚ
+char *charInRange(char *str, int start, int end);                                         //·µ»ØÖ¸¶¨·¶Î§ÄÚµÄ×Ö·û´®
+void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, UINT transparentcolor); //»æÖÆÍ¸Ã÷Í¼Æ¬
