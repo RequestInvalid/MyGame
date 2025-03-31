@@ -10,11 +10,6 @@ typedef enum frameStatus
     PASSPORT,
 } frameStatus;
 
-// typedef enum warn
-// {
-
-// } warn;
-
 void loginBox()
 {
     /*设置登录框*/
@@ -36,8 +31,7 @@ void loginBox()
     login_font.lfWeight = FW_BOLD;
     settextcolor(BLACK);
     settextstyle(&login_font); //设置输出字体
-
-    setfillcolor(WHITE); //设置填充框颜色
+    setfillcolor(WHITE);       //设置填充框颜色
 
     loadimage(&login_box, _T("img/login.png"), 350, 350); //加载缩小后的登录框图片
     putimage(305, 95, &login_box);
@@ -174,8 +168,7 @@ void registerBox()
     register_font.lfWeight = FW_BOLD;
     settextcolor(BLACK);
     settextstyle(&register_font); //设置输出字体
-
-    setfillcolor(WHITE); //设置填充框颜色
+    setfillcolor(WHITE);          //设置填充框颜色
 
     loadimage(&register_box, _T("resource/register.png"), 350, 350); //加载缩小后的登录框图片
     putimage(305, 95, &register_box);

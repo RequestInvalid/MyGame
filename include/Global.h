@@ -9,8 +9,8 @@
 #define GAME_WIDTH 960
 #define GAME_HEIGHT 540
 
-#ifndef MACRO
-#define MACRO
+#ifndef GLOBAL_H
+#define GLOBAL_H
 //利用枚举来创造状态机
 typedef enum
 {
@@ -33,6 +33,7 @@ typedef struct userData
 #endif
 
 /*函数声明*/
-int determineMouse(ExMessage msg, int startX, int startY, int endX, int endY);            //检测鼠标坐标是否在某一矩形内
-char *charInRange(char *str, int start, int end);                                         //返回指定范围内的字符串
-void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, UINT transparentcolor); //绘制透明图片
+int determineMouse(ExMessage msg, int startX, int startY, int endX, int endY);                                           //检测鼠标坐标是否在某一矩形内
+char *charInRange(char *str, int start, int end);                                                                        //返回指定范围内的字符串
+void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, int widthDest, int heightDest, UINT transparentcolor); //绘制透明图片
+void EasyPutImage(int x, int y, const char *img, int sizeX, int sizeY);

@@ -1,4 +1,5 @@
 #include "Global.h"
+#include "Hook.h"
 
-void mainEngin();
+void mainEngine();
 void UpdateGraph(ExMessage *action);

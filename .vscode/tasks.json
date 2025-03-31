@@ -14,6 +14,7 @@
                 "${fileDirname}\\src\\LoginAndRegister.cpp",
                 "${fileDirname}\\src\\DataOperate.cpp",
                 "${fileDirname}\\src\\GameEngine.cpp",
+                "${fileDirname}\\src\\Hook.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "-L",

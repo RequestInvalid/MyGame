@@ -29,7 +29,7 @@ char *charInRange(char *str, int start, int end)
     return output;
 }
 
-void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, UINT transparentcolor)
+void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, int widthDest, int heightDest, UINT transparentcolor)
 {
     /*绘制透明图片*/
     HDC dstDC = GetImageHDC(dstimg);
@@ -37,5 +37,12 @@ void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, UINT transpare
     int w = srcimg->getwidth();
     int h = srcimg->getheight();
     // 使用 Windows GDI 函数实现透明位图
-    TransparentBlt(dstDC, x, y, w, h, srcDC, 0, 0, w, h, transparentcolor);
+    TransparentBlt(dstDC, x, y, widthDest, heightDest, srcDC, 0, 0, w, h, transparentcolor);
+}
+
+void EasyPutImage(int x, int y, const char *img, int sizeX, int sizeY)
+{
+    IMAGE image;
+    loadimage(&image, img, sizeX, sizeY);
+    putimage(x, y, &image);
 }
