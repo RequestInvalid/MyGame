@@ -6,14 +6,14 @@ void initHook(Hook *hook)
     hook->y = 118;
     hook->sizeX = 71;
     hook->sizeY = 40;
-    hook->length = 30;
+    hook->length = 70;
     hook->angle = 0; // 初始角度
 }
 
 void swangHook(Hook *hook)
 {
     static DWORD currentTime, lastTime = 0;
-    static float dAngle = 1.0f; // 钩子旋转角度
+    static float dAngle = 2.0f; // 钩子旋转速度
     if (lastTime == 0)
     {
         lastTime = GetTickCount();
@@ -23,7 +23,7 @@ void swangHook(Hook *hook)
     {
         if (hook->angle <= 60 && hook->angle >= -60)
         {
-            hook->angle += dAngle; // 旋转角度
+            hook->angle += dAngle; // 改变旋转角度
         }
         else
         {
@@ -39,8 +39,8 @@ void swangHook(Hook *hook)
         }
         hook->midX = 483 + sin(hook->angle * PI / 180) * hook->length;
         hook->midY = 88 + cos(hook->angle * PI / 180) * hook->length;
-        hook->sizeX = (71 * cos(hook->angle * PI / 180)) + (40 * sin(hook->angle * PI / 180));
-        hook->sizeY = (71 * sin(hook->angle * PI / 180)) + (40 * cos(hook->angle * PI / 180));
+        hook->sizeX = (int)(fabs(71 * cos(hook->angle * PI / 180))) + (fabs(40 * sin(hook->angle * PI / 180)));
+        hook->sizeY = (int)(fabs(71 * sin(hook->angle * PI / 180))) + (fabs(40 * cos(hook->angle * PI / 180)));
         hook->x = hook->midX - (hook->sizeX / 2);
         hook->y = hook->midY - (hook->sizeY / 2);
         lastTime = currentTime;

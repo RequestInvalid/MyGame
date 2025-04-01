@@ -8,13 +8,24 @@ Hook *hook = (Hook *)malloc(sizeof(Hook)); //创建钩子对象
 
 void test()
 {
-    IMAGE img1, img2;
     IMAGE *img3 = updateMiner();
     TransparentImage(NULL, 455, 10, img3, 100, 100, BLACK);
+    swangHook(hook); //更新钩子状态
+    IMAGE img1, img2;
+
+    // 加载原始图片
     loadimage(&img1, _T("img/hook.png"));
-    swangHook(hook);                                   //钩子旋转
-    rotateimage(&img2, &img1, hook->angle * PI / 180); //旋转钩子
-    TransparentImage(NULL, hook->x, hook->y, &img2, 71, 40, BLACK);
+    int srcWidth = img1.getwidth();
+    int srcHeight = img1.getheight();
+
+    // 创建足够大的目标图像
+    img2.Resize(hook->sizeX, hook->sizeY);
+
+    // 旋转图片
+    rotateimage(&img2, &img1, hook->angle * PI / 180, BLACK, true, true);
+
+    // 使用透明方式显示旋转后的图片
+    TransparentImage(NULL, hook->x, hook->y, &img2, hook->sizeX, hook->sizeY, BLACK);
 }
 
 void mainEngine()
