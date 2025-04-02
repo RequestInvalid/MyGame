@@ -5,6 +5,13 @@
 GameStatus Status = MAIN_MENU; //初始化状态机
 userData *user;
 
+int location[4][4] = { //记录主菜单按钮坐标
+    {240, 60, 310, 93},
+    {240, 113, 310, 146},
+    {220, 166, 326, 199},
+    {240, 219, 310, 252}};
+TCHAR text[][12] = {_T("登录"), _T("注册"), _T("排行榜"), _T("退出")}; //记录主菜单按钮文本
+
 void gameLoop(); //游戏循环体，切换游戏窗口状态
 void mainMenu(); //主菜单
 
@@ -44,12 +51,6 @@ void gameLoop()
 void mainMenu()
 {
     /*主菜单*/
-    int location[4][4] = {//记录主菜单按钮坐标
-                          {240, 60, 310, 93},
-                          {240, 113, 310, 146},
-                          {220, 166, 326, 199},
-                          {240, 219, 310, 252}};
-    TCHAR text[][12] = {_T("登录"), _T("注册"), _T("排行榜"), _T("退出")}; //记录主菜单按钮文本
     ExMessage mouse;
     IMAGE img;
     SIZE textsize;

@@ -22,16 +22,18 @@ typedef struct
     float angle;                        // 旋转角度（角度制）
     float speed;                        // 旋转速度
     float extendSpeed;                  // 伸展速度
-    float retractSpeed;                 // 收回速度
+    float backSpeed;                    // 收回速度
     HookState state;                    // 当前钩子状态
 } Hook;
 
 // 钩子相关函数
-void initHook(Hook *hook);
-void swangHook(Hook *hook);
-void updateHook(Hook *hook);
-void drawHook(Hook *hook);
-IMAGE *updateMiner();
-void updateHook(Hook *hook);
+void initHook(Hook *hook);      // 初始化钩子
+void swangHook(Hook *hook);     // 钩子旋转
+void exbandHook(Hook *hook);    // 钩子伸展
+void backHook(Hook *hook);      // 钩子收回
+void updateHook(Hook *hook);    // 更新钩子状态
+void drawHook(Hook *hook);      // 绘制钩子
+IMAGE *updateMiner(Hook *hook); // 更新矿工状态
+void drawMiner(IMAGE *img);     // 绘制矿工
 
 #endif

@@ -15,6 +15,7 @@
                 "${fileDirname}\\src\\DataOperate.cpp",
                 "${fileDirname}\\src\\GameEngine.cpp",
                 "${fileDirname}\\src\\Hook.cpp",
+                "${fileDirname}\\src\\Mine.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "-L",

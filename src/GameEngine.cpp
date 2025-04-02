@@ -6,26 +6,24 @@ extern userData *user;
 
 Hook *hook = (Hook *)malloc(sizeof(Hook)); //创建钩子对象
 
-void test()
+DWORD WINAPI detectKeyPress(LPVOID param)
 {
-    IMAGE *img3 = updateMiner();
-    TransparentImage(NULL, 455, 10, img3, 100, 100, BLACK);
-    swangHook(hook); //更新钩子状态
-    IMAGE img1, img2;
+    /*多线程检测按键事件的线程*/
+    Hook *hook = (Hook *)param; // 获取传入的钩子对象指针
 
-    // 加载原始图片
-    loadimage(&img1, _T("img/hook.png"));
-    int srcWidth = img1.getwidth();
-    int srcHeight = img1.getheight();
-
-    // 创建足够大的目标图像
-    img2.Resize(hook->sizeX, hook->sizeY);
-
-    // 旋转图片
-    rotateimage(&img2, &img1, hook->angle * PI / 180, BLACK, true, true);
-
-    // 使用透明方式显示旋转后的图片
-    TransparentImage(NULL, hook->x, hook->y, &img2, hook->sizeX, hook->sizeY, BLACK);
+    while (1)
+    {
+        // 检测键盘按下事件
+        if (GetAsyncKeyState(VK_DOWN) & 0x8000) // 检测下方向键是否按下
+        {
+            if (hook->state == HOOK_ROTATE) // 仅在钩子处于旋转状态时处理
+            {
+                hook->state = HOOK_EXTEND;
+            }
+        }
+        // Sleep(10); // 减少 CPU 占用
+    }
+    return 0;
 }
 
 void mainEngine()
@@ -33,19 +31,38 @@ void mainEngine()
     /*主引擎*/
     ExMessage action;
     initHook(hook);
+    HANDLE keyPressThread = CreateThread(NULL, 0, detectKeyPress, hook, 0, NULL); //创建线程检测按键事件
     while (1)
     {
-        Sleep(10);            //休眠0.01秒（设置帧率为100fps）
-        peekmessage(&action); //获取消息
-        UpdateGraph(&action);
+        Sleep(10);                    //休眠0.01秒（设置帧率为100fps）
+        peekmessage(&action, EM_KEY); //获取消息
+        updateData(&action, hook);
+        updateGraph();
         flushmessage();
     }
 }
 
-void UpdateGraph(ExMessage *action)
+void updateData(ExMessage *msg, Hook *hook)
+{
+    if (hook->state == HOOK_EXTEND)
+    {
+        exbandHook(hook);
+    }
+    else if (hook->state == HOOK_BACK)
+    {
+        backHook(hook); //钩子收回
+    }
+    else if (hook->state == HOOK_ROTATE)
+    {
+        swangHook(hook); //钩子旋转
+    }
+}
+
+void updateGraph()
 {
     BeginBatchDraw();
     EasyPutImage(0, 0, "img/gameBackground.jpg", getwidth(), getheight());
-    test();
+    drawMiner(updateMiner(hook));
+    drawHook(hook);
     FlushBatchDraw();
 }
