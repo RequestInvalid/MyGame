@@ -5,13 +5,26 @@ extern GameStatus Status;
 extern userData *user;
 
 Hook *hook = (Hook *)malloc(sizeof(Hook)); //创建钩子对象
+MineLink *minelink = createMineLink(10);
+
+// test
+void test()
+{
+    IMAGE img, img2, img3;
+    loadimage(&img, _T("img/largeGold.png"));
+    loadimage(&img2, _T("img/midGold.png"));
+    loadimage(&img3, _T("img/smallGold.png"));
+    TransparentImage(NULL, 100, 100, &img, img.getwidth(), img.getheight(), BLACK);
+    TransparentImage(NULL, 200, 200, &img2, img2.getwidth(), img2.getheight(), BLACK);
+    TransparentImage(NULL, 300, 300, &img3, img3.getwidth(), img3.getheight(), BLACK);
+}
 
 DWORD WINAPI detectKeyPress(LPVOID param)
 {
     /*多线程检测按键事件的线程*/
     Hook *hook = (Hook *)param; // 获取传入的钩子对象指针
 
-    while (1)
+    while (true)
     {
         // 检测键盘按下事件
         if (GetAsyncKeyState(VK_DOWN) & 0x8000) // 检测下方向键是否按下
@@ -26,19 +39,36 @@ DWORD WINAPI detectKeyPress(LPVOID param)
     return 0;
 }
 
+void init(Hook *hook)
+{
+    initHook(hook);
+    countGameTime(true);
+    swangHook(hook, true);
+    exbandHook(hook, true);
+    backHook(hook, true);
+    updateMiner(hook, true);
+    drawMine(minelink, true);
+}
+
 void mainEngine()
 {
     /*主引擎*/
     ExMessage action;
-    initHook(hook);
+    DWORD currentTime, lastTime;
     HANDLE keyPressThread = CreateThread(NULL, 0, detectKeyPress, hook, 0, NULL); //创建线程检测按键事件
-    while (1)
+    init(hook);
+    lastTime = GetTickCount();
+    while (true)
     {
-        Sleep(10);                    //休眠0.01秒（设置帧率为100fps）
-        peekmessage(&action, EM_KEY); //获取消息
-        updateData(&action, hook);
-        updateGraph();
-        flushmessage();
+        currentTime = GetTickCount();
+        if (currentTime - lastTime >= 10) // 0.01秒刷新一帧
+        {
+            peekmessage(&action, EM_KEY); //获取消息
+            updateData(&action, hook);
+            updateGraph();
+            flushmessage();
+            lastTime = currentTime;
+        }
     }
 }
 
@@ -46,23 +76,28 @@ void updateData(ExMessage *msg, Hook *hook)
 {
     if (hook->state == HOOK_EXTEND)
     {
-        exbandHook(hook);
+        exbandHook(hook, false);
     }
     else if (hook->state == HOOK_BACK)
     {
-        backHook(hook); //钩子收回
+        backHook(hook, false); //钩子收回
     }
     else if (hook->state == HOOK_ROTATE)
     {
-        swangHook(hook); //钩子旋转
+        swangHook(hook, false); //钩子旋转
     }
 }
 
 void updateGraph()
 {
     BeginBatchDraw();
+
     EasyPutImage(0, 0, "img/gameBackground.jpg", getwidth(), getheight());
-    drawMiner(updateMiner(hook));
+    drawMiner(updateMiner(hook, false));
+    displayGameTime(countGameTime(false));
+    drawMine(minelink, false);
     drawHook(hook);
+    // test();
+
     FlushBatchDraw();
 }

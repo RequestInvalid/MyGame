@@ -9,14 +9,19 @@ void initHook(Hook *hook)
     hook->length = 35;
     hook->angle = 0; // 初始角度
     hook->extendSpeed = 10;
-    hook->backSpeed = 10;
+    hook->backSpeed = 5;
     hook->state = HOOK_ROTATE;
 }
 
-void swangHook(Hook *hook)
+void swangHook(Hook *hook, boolean isNewGame = false)
 {
     static DWORD currentTime, lastTime = 0;
     static float dAngle = 2.0f; // 钩子旋转速度
+    if (isNewGame)
+    {
+        lastTime = 0;
+        return;
+    }
     if (lastTime == 0)
     {
         lastTime = GetTickCount();
@@ -50,10 +55,21 @@ void swangHook(Hook *hook)
     }
 }
 
-void exbandHook(Hook *hook)
+void exbandHook(Hook *hook, boolean isNewGame = false)
 {
     /*钩子伸展和收回的逻辑*/
-    if (hook->state == HOOK_EXTEND)
+    static DWORD currentTime, lastTime = 0;
+    if (isNewGame)
+    {
+        lastTime = 0;
+        return;
+    }
+    if (lastTime == 0)
+    {
+        lastTime = GetTickCount();
+    }
+    currentTime = GetTickCount();
+    if (currentTime - lastTime >= 10)
     {
         if (hook->midX <= 50 || hook->midY >= GAME_HEIGHT - 50 || hook->midX >= GAME_WIDTH - 50)
         {
@@ -63,20 +79,31 @@ void exbandHook(Hook *hook)
         {
             // 伸展钩子时更新钩子坐标
             hook->length += hook->extendSpeed;
-            hook->x = (int)(hook->x + (hook->extendSpeed * sin(hook->angle * PI / 180)));
-            hook->y = (int)(hook->y + (hook->extendSpeed * cos(hook->angle * PI / 180)));
-            hook->midX = (int)(hook->midX + (hook->extendSpeed * sin(hook->angle * PI / 180)));
-            hook->midY = (int)(hook->midY + (hook->extendSpeed * cos(hook->angle * PI / 180)));
+            hook->midX = 483 + sin(hook->angle * PI / 180) * hook->length;
+            hook->midY = 88 + cos(hook->angle * PI / 180) * hook->length;
+            hook->x = hook->midX - (hook->sizeX / 2);
+            hook->y = hook->midY - (hook->sizeY / 2);
         }
     }
 }
 
-void backHook(Hook *hook)
+void backHook(Hook *hook, boolean isNewGame = false)
 {
     /*钩子收回的逻辑*/
-    if (hook->state == HOOK_BACK)
+    static DWORD currentTime, lastTime = 0;
+    if (isNewGame)
     {
-        if (hook->length <= 50)
+        lastTime = 0;
+        return;
+    }
+    if (lastTime == 0)
+    {
+        lastTime = GetTickCount();
+    }
+    currentTime = GetTickCount();
+    if (currentTime - lastTime >= 10)
+    {
+        if (calculateDistance(hook->midX, hook->midY, 483, 88) <= 50)
         {
             hook->state = HOOK_ROTATE;
             initHook(hook); // 重置钩子状态
@@ -85,11 +112,41 @@ void backHook(Hook *hook)
         {
             // 收回钩子时更新钩子坐标
             hook->length -= hook->backSpeed;
-            hook->x = hook->x - (int)(hook->backSpeed * sin(hook->angle * PI / 180));
-            hook->y = hook->y - (int)(hook->backSpeed * cos(hook->angle * PI / 180));
-            hook->midX = hook->midX - (int)(hook->backSpeed * sin(hook->angle * PI / 180));
-            hook->midY = hook->midY - (int)(hook->backSpeed * cos(hook->angle * PI / 180));
+            hook->midX = 483 + sin(hook->angle * PI / 180) * hook->length;
+            hook->midY = 88 + cos(hook->angle * PI / 180) * hook->length;
+            hook->x = hook->midX - (hook->sizeX / 2);
+            hook->y = hook->midY - (hook->sizeY / 2);
         }
+    }
+}
+
+IMAGE *updateMiner(Hook *hook, boolean isNewGame = false)
+{
+    static DWORD currentTime, lastTime = 0;
+    static IMAGE minerUp, minerDown;
+    static boolean isUp = true;
+    if (isNewGame)
+    {
+        loadimage(&minerUp, _T("img/minerup.png"));
+        loadimage(&minerDown, _T("img/minerdown.png"));
+    }
+    if (hook->state == HOOK_ROTATE)
+    {
+        return &minerUp;
+    }
+    else
+    {
+        if (lastTime == 0)
+        {
+            lastTime = GetTickCount();
+        }
+        currentTime = GetTickCount();
+        if (currentTime - lastTime >= 300)
+        {
+            lastTime = currentTime;
+            isUp = !isUp;
+        }
+        return isUp ? &minerUp : &minerDown;
     }
 }
 
@@ -113,33 +170,6 @@ void drawHook(Hook *hook)
     setlinecolor(BLACK);
     setlinestyle(PS_SOLID, 3);
     line(483, 88, offsetX, offsetY);
-}
-
-IMAGE *updateMiner(Hook *hook)
-{
-    static DWORD currentTime, lastTime = 0;
-    static IMAGE minerUp, minerDown;
-    static boolean isUp = true;
-    loadimage(&minerUp, _T("img/minerup.png"));
-    loadimage(&minerDown, _T("img/minerdown.png"));
-    if (hook->state == HOOK_ROTATE)
-    {
-        return &minerUp;
-    }
-    else
-    {
-        if (lastTime == 0)
-        {
-            lastTime = GetTickCount();
-        }
-        currentTime = GetTickCount();
-        if (currentTime - lastTime >= 300)
-        {
-            lastTime = currentTime;
-            isUp = !isUp;
-        }
-        return isUp ? &minerUp : &minerDown;
-    }
 }
 
 void drawMiner(IMAGE *img)

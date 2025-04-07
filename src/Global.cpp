@@ -46,3 +46,8 @@ void EasyPutImage(int x, int y, const char *img, int sizeX, int sizeY)
     loadimage(&image, img, sizeX, sizeY);
     putimage(x, y, &image);
 }
+
+float calculateDistance(int x1, int y1, int x2, int y2)
+{
+    return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+}

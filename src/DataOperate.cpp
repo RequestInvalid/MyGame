@@ -1,7 +1,5 @@
 #include "DataOperate.h"
 
-extern GameStatus Status;
-
 userData *loadUserData()
 {
     /*加载用户数据为链表，返回头指针(可能还有问题？)*/
