@@ -6,10 +6,11 @@ void initHook(Hook *hook)
     hook->y = 118;
     hook->sizeX = 45;
     hook->sizeY = 20;
-    hook->length = 35;
-    hook->angle = 0; // 初始角度
+    hook->length = 35; // 初始长度，也即旋转钩子时长度
+    hook->angle = 0;   // 初始角度
     hook->extendSpeed = 10;
     hook->backSpeed = 5;
+    hook->mine = NULL; // 初始化抓到的矿物为NULL
     hook->state = HOOK_ROTATE;
 }
 
@@ -55,7 +56,7 @@ void swangHook(Hook *hook, boolean isNewGame = false)
     }
 }
 
-void exbandHook(Hook *hook, boolean isNewGame = false)
+void exbandHook(Hook *hook, MineLink *head, boolean isNewGame = false)
 {
     /*钩子伸展和收回的逻辑*/
     static DWORD currentTime, lastTime = 0;
@@ -71,9 +72,17 @@ void exbandHook(Hook *hook, boolean isNewGame = false)
     currentTime = GetTickCount();
     if (currentTime - lastTime >= 10)
     {
+        MineLink *touchMine = isTouchHook(hook, head);
         if (hook->midX <= 50 || hook->midY >= GAME_HEIGHT - 50 || hook->midX >= GAME_WIDTH - 50)
         {
+            // 到达窗口边框返回
             hook->state = HOOK_BACK;
+        }
+        else if (touchMine != NULL)
+        {
+            hook->backSpeed = touchMine->mine.backSpeed;
+            hook->mine = touchMine;
+            hook->state = HOOK_CATCH;
         }
         else
         {

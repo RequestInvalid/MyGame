@@ -5,7 +5,7 @@ extern GameStatus Status;
 extern userData *user;
 
 Hook *hook = (Hook *)malloc(sizeof(Hook)); //创建钩子对象
-MineLink *minelink = createMineLink(10);
+MineLink *minelink = createMineLink(10);   //随机生成矿物
 
 // test
 void test()
@@ -44,7 +44,7 @@ void init(Hook *hook)
     initHook(hook);
     countGameTime(true);
     swangHook(hook, true);
-    exbandHook(hook, true);
+    exbandHook(hook, minelink, true);
     backHook(hook, true);
     updateMiner(hook, true);
     drawMine(minelink, true);
@@ -72,11 +72,11 @@ void mainEngine()
     }
 }
 
-void updateData(ExMessage *msg, Hook *hook)
+void updateData(ExMessage *msg, Hook *hook) //参数msg没用，记得删
 {
     if (hook->state == HOOK_EXTEND)
     {
-        exbandHook(hook, false);
+        exbandHook(hook, minelink, false);
     }
     else if (hook->state == HOOK_BACK)
     {
@@ -85,6 +85,10 @@ void updateData(ExMessage *msg, Hook *hook)
     else if (hook->state == HOOK_ROTATE)
     {
         swangHook(hook, false); //钩子旋转
+    }
+    else
+    {
+        moveHookAndMine(hook, hook->mine, &minelink);
     }
 }
 

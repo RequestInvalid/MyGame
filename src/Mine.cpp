@@ -48,8 +48,7 @@ void displayGameTime(int GameTime)
 void initLargeGold(Mine *mine)
 {
     mine->type = MAX_GOLD;
-    mine->backSpeed = 4;
-    mine->isCollected = false;
+    mine->backSpeed = 2;
     mine->radius = 34;
     mine->value = 500;
 }
@@ -57,37 +56,33 @@ void initLargeGold(Mine *mine)
 void initMidGold(Mine *mine)
 {
     mine->type = MID_GOLD;
-    mine->backSpeed = 6;       // 中金矿回收速度较快
-    mine->isCollected = false; // 初始状态未被收集
-    mine->radius = 15;         // 中金矿半径较小
-    mine->value = 300;         // 中金矿价值较低
+    mine->backSpeed = 4; // 中金矿回收速度较快
+    mine->radius = 15;   // 中金矿半径较小
+    mine->value = 300;   // 中金矿价值较低
 }
 
 void initSmallGold(Mine *mine)
 {
     mine->type = MIN_GOLD;
-    mine->backSpeed = 8;       // 小金矿回收速度最快
-    mine->isCollected = false; // 初始状态未被收集
-    mine->radius = 10;         // 小金矿半径最小
-    mine->value = 50;          // 小金矿价值最低
+    mine->backSpeed = 8; // 小金矿回收速度最快
+    mine->radius = 10;   // 小金矿半径最小
+    mine->value = 50;    // 小金矿价值最低
 }
 
 void initDiamond(Mine *mine)
 {
     mine->type = DIAMOND;
-    mine->backSpeed = 8;       // 钻石回收速度较慢
-    mine->isCollected = false; // 初始状态未被收集
-    mine->radius = 12;         // 钻石半径
-    mine->value = 800;         // 钻石价值最高
+    mine->backSpeed = 8; // 钻石回收速度较慢
+    mine->radius = 12;   // 钻石半径
+    mine->value = 800;   // 钻石价值最高
 }
 
 void initStone(Mine *mine)
 {
     mine->type = STONE;
-    mine->backSpeed = 4;       // 石头回收速度最慢
-    mine->isCollected = false; // 初始状态未被收集
-    mine->radius = 32;         // 石头半径较大
-    mine->value = 20;          // 石头价值最低
+    mine->backSpeed = 1; // 石头回收速度最慢
+    mine->radius = 32;   // 石头半径较大
+    mine->value = 20;    // 石头价值最低
 }
 
 boolean isValidPosition(MineLink *head, int x, int y, int radius)
@@ -184,17 +179,17 @@ MineLink *createMineLink(int count)
     return head;
 }
 
-void deleteMine(MineLink *head, MineLink *mine)
+void deleteMine(MineLink **head, MineLink *mine)
 {
-    if (head == mine)
+    if (*head == mine)
     {
-        MineLink *temp = head;
-        head = head->next;
-        free(temp);
+        MineLink *temp = *head;
+        *head = (*head)->next;
+        free(mine);
     }
     else
     {
-        MineLink *current = head;
+        MineLink *current = *head;
         while (current != NULL && current->next != mine)
         {
             current = current->next;
@@ -222,21 +217,53 @@ void drawMine(MineLink *head, boolean isNewGame = false)
     MineLink *ptr = head;
     while (ptr != NULL)
     {
-        if (!ptr->mine.isCollected)
-        {
-            int x = ptr->mine.x - (mineImg[ptr->mine.type].getwidth() / 2);
-            int y = ptr->mine.y - (mineImg[ptr->mine.type].getheight() / 2);
-            TransparentImage(NULL, x, y, &mineImg[ptr->mine.type], mineImg[ptr->mine.type].getwidth(), mineImg[ptr->mine.type].getheight(), BLACK);
-        }
+        int x = ptr->mine.x - (mineImg[ptr->mine.type].getwidth() / 2);
+        int y = ptr->mine.y - (mineImg[ptr->mine.type].getheight() / 2);
+        TransparentImage(NULL, x, y, &mineImg[ptr->mine.type], mineImg[ptr->mine.type].getwidth(), mineImg[ptr->mine.type].getheight(), BLACK);
         ptr = ptr->next;
     }
 }
 
-boolean isTouchHook(Hook *hook, Mine mine)
+MineLink *isTouchHook(Hook *hook, MineLink *head)
 {
-    return calculateDistance(hook->midX, hook->midY, mine.x, mine.y) < (mine.radius + 10) ? true : false;
+    MineLink *ptr = head;
+    while (ptr != NULL)
+    {
+        if (calculateDistance(hook->midX, hook->midY, ptr->mine.x, ptr->mine.y) < (ptr->mine.radius + 10))
+        {
+            return ptr;
+        }
+        ptr = ptr->next;
+    }
+    return NULL;
 }
 
-void moveMine()
+void moveHookAndMine(Hook *hook, MineLink *mine, MineLink **head)
 {
+    static DWORD currentTime, lastTime = 0;
+    if (lastTime == 0)
+    {
+        lastTime = GetTickCount();
+    }
+    currentTime = GetTickCount();
+    if (currentTime - lastTime >= 10)
+    {
+        if (calculateDistance(hook->midX, hook->midY, 483, 88) <= 50)
+        {
+            hook->state = HOOK_ROTATE;
+            deleteMine(head, mine);
+            initHook(hook); // 重置钩子状态
+        }
+        else
+        {
+            // 收回钩子时更新钩子坐标
+            hook->length -= hook->backSpeed;
+            hook->midX = 483 + sin(hook->angle * PI / 180) * hook->length;
+            hook->midY = 88 + cos(hook->angle * PI / 180) * hook->length;
+            hook->x = hook->midX - (hook->sizeX / 2);
+            hook->y = hook->midY - (hook->sizeY / 2);
+            mine->mine.x = hook->midX + sin(hook->angle * PI / 180) * mine->mine.radius;
+            mine->mine.y = hook->midY + cos(hook->angle * PI / 180) * mine->mine.radius;
+        }
+    }
 }

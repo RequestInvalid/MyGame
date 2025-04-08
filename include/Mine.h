@@ -4,38 +4,14 @@
 #include "Global.h"
 #include "Hook.h"
 
-typedef enum MineType
-{
-    MAX_GOLD,
-    MID_GOLD,
-    MIN_GOLD,
-    DIAMOND,
-    STONE,
-} MineType;
-
-typedef struct Mine
-{
-    MineType type;
-    int value;
-    int x;
-    int y;
-    int radius;
-    float backSpeed;
-    boolean isCollected;
-} Mine;
-
-typedef struct MineLink
-{
-    Mine mine;
-    struct MineLink *next;
-} MineLink;
-
 int countGameTime(boolean isNewGame);
 void displayGameTime(int GameTime);
 int countScore(boolean isNewGame);
 void displayScore(int score);
 MineLink *createMineLink(int count);
-void deleteMine(MineLink *head, MineLink *mine);
+void deleteMine(MineLink **head, MineLink *mine);
+MineLink *isTouchHook(Hook *hook, MineLink *head);
+void moveHookAndMine(Hook *hook, MineLink *mine, MineLink **head);
 
 void initLargeGold(Mine *mine); // 初始化大金矿
 void initMidGold(Mine *mine);   // 初始化中金矿
