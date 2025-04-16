@@ -137,7 +137,7 @@ void loginBox()
                     if (userPtr != NULL && !strcmp(userPtr->pasport, charInRange(temp_passport, 0, passport_length)))
                     {
                         user = userPtr;
-                        Status = GAME; //登录成功跳转
+                        Status = GAMING; //登录成功跳转
                         break;
                     }
                 }

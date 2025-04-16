@@ -9,7 +9,7 @@ void initHook(Hook *hook)
     hook->length = 35; // 初始长度，也即旋转钩子时长度
     hook->angle = 0;   // 初始角度
     hook->extendSpeed = 10;
-    hook->backSpeed = 5;
+    hook->backSpeed = 10;
     hook->mine = NULL; // 初始化抓到的矿物为NULL
     hook->state = HOOK_ROTATE;
 }
@@ -115,7 +115,9 @@ void backHook(Hook *hook, boolean isNewGame = false)
         if (calculateDistance(hook->midX, hook->midY, 483, 88) <= 50)
         {
             hook->state = HOOK_ROTATE;
-            initHook(hook); // 重置钩子状态
+            hook->length = 35;
+            hook->backSpeed = 10;
+            // initHook(hook); // 重置钩子状态
         }
         else
         {

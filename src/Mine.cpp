@@ -1,14 +1,18 @@
 #include "Mine.h"
 
+extern GameStatus Status;
+
 int randomInRange(int min, int max)
 {
+    /*返回范围内的随机数*/
     return rand() % (max - min + 1) + min;
 }
 
-int countGameTime(boolean isNewGame = false)
+int countGameTime(int goal, boolean isNextLevel = false)
 {
+    /*计算游戏剩余时间*/
     static int gameTime;
-    if (isNewGame == true)
+    if (isNextLevel == true)
     {
         gameTime = 60;
         return 0;
@@ -26,11 +30,116 @@ int countGameTime(boolean isNewGame = false)
         {
             gameTime--;
         }
+        else
+        {
+            if (countMoney(0, false) > goal)
+            {
+                Status = WIN;
+                EndBatchDraw();
+            }
+            else
+            {
+                Status = LOSE;
+                EndBatchDraw();
+            }
+        }
     }
     return gameTime;
 }
 
+int countMoney(int addMoney, boolean isNewGame = false)
+{
+    /*计算得分逻辑*/
+    static int money = 0;
+    if (isNewGame)
+    {
+        money = 0;
+    }
+    money += addMoney;
+    return money;
+}
+
+void setGoal(int *goal, MineLink *head, boolean isNewGame)
+{
+    /*设置目标金额*/
+    if (isNewGame)
+    {
+        *goal = 0;
+    }
+    MineLink *ptr = head;
+    int temp = 0;
+    while (ptr != NULL)
+    {
+        temp += ptr->mine.value;
+        ptr = ptr->next;
+    }
+    *goal += (0.6 * (temp / 10 * 10)); // 无法正确初始化
+}
+
+int countLevel(int addLevel, boolean isNewGame = false, boolean isNextLevel = false)
+{
+    /*计算当前关卡*/
+    static int level = 1;
+    if (isNewGame)
+    {
+        level = 1;
+        return level;
+    }
+    else if (isNextLevel)
+    {
+        level++;
+        return level;
+    }
+    return level;
+}
+
 void displayGameTime(int GameTime)
+{
+    /*显示游戏剩余时间*/
+    LOGFONT f;
+    settextstyle(35, 0, _T("楷体"));
+    setbkmode(TRANSPARENT);
+    gettextstyle(&f);
+    f.lfQuality = ANTIALIASED_QUALITY;
+    f.lfWeight = FW_BOLD;
+    settextcolor(BLACK);
+    settextstyle(&f);
+    char str[3];
+    sprintf(str, "%d", GameTime);
+    outtextxy(890, 15, str);
+}
+
+void displayMoney(int money)
+{
+    LOGFONT f;
+    settextstyle(35, 0, _T("楷体"));
+    setbkmode(TRANSPARENT);
+    gettextstyle(&f);
+    f.lfQuality = ANTIALIASED_QUALITY;
+    f.lfWeight = FW_BOLD;
+    settextcolor(RGB(0, 100, 0)); //设置金钱数量的颜色为深绿色
+    settextstyle(&f);
+    char str[6];
+    sprintf(str, "$%d", money);
+    outtextxy(90, 17, str);
+}
+
+void displayGoal(int goal)
+{
+    LOGFONT f;
+    settextstyle(35, 0, _T("楷体"));
+    setbkmode(TRANSPARENT);
+    gettextstyle(&f);
+    f.lfQuality = ANTIALIASED_QUALITY;
+    f.lfWeight = FW_BOLD;
+    settextcolor(RGB(255, 153, 0));
+    settextstyle(&f);
+    char str[6];
+    sprintf(str, "$%d", goal);
+    outtextxy(140, 60, str);
+}
+
+void displayLevel(int level)
 {
     LOGFONT f;
     settextstyle(35, 0, _T("楷体"));
@@ -40,49 +149,54 @@ void displayGameTime(int GameTime)
     f.lfWeight = FW_BOLD;
     settextcolor(BLACK);
     settextstyle(&f);
-    char str[2];
-    sprintf(str, "%d", GameTime);
-    outtextxy(890, 15, str);
+    char str[3];
+    sprintf(str, "%d", level);
+    outtextxy(860, 60, str);
 }
 
 void initLargeGold(Mine *mine)
 {
+    /*初始化大金块的数据*/
     mine->type = MAX_GOLD;
-    mine->backSpeed = 2;
+    mine->backSpeed = 0.8;
     mine->radius = 34;
-    mine->value = 500;
+    mine->value = 10 * randomInRange(45, 55);
 }
 
 void initMidGold(Mine *mine)
 {
+    /*初始化中金块的数据*/
     mine->type = MID_GOLD;
-    mine->backSpeed = 4; // 中金矿回收速度较快
-    mine->radius = 15;   // 中金矿半径较小
-    mine->value = 300;   // 中金矿价值较低
+    mine->backSpeed = 2;
+    mine->radius = 22;
+    mine->value = 5 * randomInRange(17, 23);
 }
 
 void initSmallGold(Mine *mine)
 {
+    /*初始化小金块的数据*/
     mine->type = MIN_GOLD;
-    mine->backSpeed = 8; // 小金矿回收速度最快
-    mine->radius = 10;   // 小金矿半径最小
-    mine->value = 50;    // 小金矿价值最低
+    mine->backSpeed = 6;
+    mine->radius = 10;
+    mine->value = 10 * randomInRange(4, 7);
 }
 
 void initDiamond(Mine *mine)
 {
+    /*初始化钻石的数据*/
     mine->type = DIAMOND;
-    mine->backSpeed = 8; // 钻石回收速度较慢
+    mine->backSpeed = 6; // 钻石回收速度较慢
     mine->radius = 12;   // 钻石半径
     mine->value = 800;   // 钻石价值最高
 }
 
 void initStone(Mine *mine)
 {
+    /*初始化石头的数据*/
     mine->type = STONE;
-    mine->backSpeed = 1; // 石头回收速度最慢
-    mine->radius = 32;   // 石头半径较大
-    mine->value = 20;    // 石头价值最低
+    mine->backSpeed = 0.7;
+    mine->radius = 32;
+    mine->value = 5 * randomInRange(3, 5);
 }
 
 boolean isValidPosition(MineLink *head, int x, int y, int radius)
@@ -104,7 +218,29 @@ boolean isValidPosition(MineLink *head, int x, int y, int radius)
 MineType randomMineType()
 {
     /*随机生成矿物类型*/
+    int weight = randomInRange(1, 100);
     int type = randomInRange(0, 4); // 0: MAX_GOLD, 1: MID_GOLD, 2: MIN_GOLD, 3: DIAMOND, 4: STONE
+    //设置生成矿物的权重
+    if (weight <= 40)
+    {
+        type = 2;
+    }
+    else if (weight <= 60)
+    {
+        type = 1;
+    }
+    else if (weight <= 70)
+    {
+        type = 0;
+    }
+    else if (weight <= 90)
+    {
+        type = 4;
+    }
+    else
+    {
+        type = 3;
+    }
     return (MineType)type;
 }
 
@@ -181,6 +317,7 @@ MineLink *createMineLink(int count)
 
 void deleteMine(MineLink **head, MineLink *mine)
 {
+    /*删除链表中选定的矿物，若矿物存在于链表头部则返回新的头指针*/
     if (*head == mine)
     {
         MineLink *temp = *head;
@@ -204,6 +341,7 @@ void deleteMine(MineLink **head, MineLink *mine)
 
 void drawMine(MineLink *head, boolean isNewGame = false)
 {
+    /*根据传入的矿物链表绘制矿物*/
     static IMAGE mineImg[5];
     if (isNewGame)
     {
@@ -226,6 +364,7 @@ void drawMine(MineLink *head, boolean isNewGame = false)
 
 MineLink *isTouchHook(Hook *hook, MineLink *head)
 {
+    /*检测钩子是否与矿物链表中的矿物相碰*/
     MineLink *ptr = head;
     while (ptr != NULL)
     {
@@ -240,6 +379,7 @@ MineLink *isTouchHook(Hook *hook, MineLink *head)
 
 void moveHookAndMine(Hook *hook, MineLink *mine, MineLink **head)
 {
+    /*如果钩子抓取到矿物，更新钩子和矿物的坐标*/
     static DWORD currentTime, lastTime = 0;
     if (lastTime == 0)
     {
@@ -251,8 +391,11 @@ void moveHookAndMine(Hook *hook, MineLink *mine, MineLink **head)
         if (calculateDistance(hook->midX, hook->midY, 483, 88) <= 50)
         {
             hook->state = HOOK_ROTATE;
+            countMoney(mine->mine.value, false);
             deleteMine(head, mine);
-            initHook(hook); // 重置钩子状态
+            hook->length = 35;
+            hook->backSpeed = 10;
+            // initHook(hook); // 重置钩子状态
         }
         else
         {

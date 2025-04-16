@@ -4,21 +4,19 @@
 #include "Global.h"
 #include "Hook.h"
 
-int countGameTime(boolean isNewGame);
-void displayGameTime(int GameTime);
-int countScore(boolean isNewGame);
-void displayScore(int score);
+int countGameTime(int goal, boolean isNextLevel);
+int countMoney(int addScore, boolean isNewGame);
+void setGoal(int *goal, MineLink *head, boolean isNewGame);
+int countLevel(int addLevel, boolean isNewGame, boolean isNextLevel);
 MineLink *createMineLink(int count);
 void deleteMine(MineLink **head, MineLink *mine);
 MineLink *isTouchHook(Hook *hook, MineLink *head);
 void moveHookAndMine(Hook *hook, MineLink *mine, MineLink **head);
 
-void initLargeGold(Mine *mine); // 初始化大金矿
-void initMidGold(Mine *mine);   // 初始化中金矿
-void initSmallGold(Mine *mine); // 初始化小金矿
-void initDiamond(Mine *mine);   // 初始化钻石
-void initStone(Mine *mine);     // 初始化石头
-
+void displayGameTime(int GameTime);
+void displayMoney(int score);
+void displayGoal(int goal);
+void displayLevel(int level);
 void drawMine(MineLink *head, boolean isNewGame);
 
 #endif

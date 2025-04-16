@@ -4,20 +4,10 @@
 extern GameStatus Status;
 extern userData *user;
 
+boolean isNewGame = true;
 Hook *hook = (Hook *)malloc(sizeof(Hook)); //创建钩子对象
-MineLink *minelink = createMineLink(10);   //随机生成矿物
-
-// test
-void test()
-{
-    IMAGE img, img2, img3;
-    loadimage(&img, _T("img/largeGold.png"));
-    loadimage(&img2, _T("img/midGold.png"));
-    loadimage(&img3, _T("img/smallGold.png"));
-    TransparentImage(NULL, 100, 100, &img, img.getwidth(), img.getheight(), BLACK);
-    TransparentImage(NULL, 200, 200, &img2, img2.getwidth(), img2.getheight(), BLACK);
-    TransparentImage(NULL, 300, 300, &img3, img3.getwidth(), img3.getheight(), BLACK);
-}
+MineLink *minelink = createMineLink(20);   //随机生成矿物
+int goal = 0;
 
 DWORD WINAPI detectKeyPress(LPVOID param)
 {
@@ -39,15 +29,22 @@ DWORD WINAPI detectKeyPress(LPVOID param)
     return 0;
 }
 
-void init(Hook *hook)
+void init(int goal, Hook *hook, MineLink *minelink)
 {
+
     initHook(hook);
-    countGameTime(true);
-    swangHook(hook, true);
-    exbandHook(hook, minelink, true);
-    backHook(hook, true);
-    updateMiner(hook, true);
-    drawMine(minelink, true);
+    minelink = createMineLink(20); //生成矿物
+    countGameTime(0, isNewGame);
+    setGoal(&goal, minelink, isNewGame);
+    swangHook(hook, isNewGame);
+    exbandHook(hook, minelink, isNewGame);
+    backHook(hook, isNewGame);
+    updateMiner(hook, isNewGame);
+    drawMine(minelink, isNewGame);
+    if (isNewGame)
+    {
+        isNewGame = false;
+    }
 }
 
 void mainEngine()
@@ -56,23 +53,45 @@ void mainEngine()
     ExMessage action;
     DWORD currentTime, lastTime;
     HANDLE keyPressThread = CreateThread(NULL, 0, detectKeyPress, hook, 0, NULL); //创建线程检测按键事件
-    init(hook);
     lastTime = GetTickCount();
+    // setGoal(&goal, minelink, true);
+    init(goal, hook, minelink);
+    setGoal(&goal, minelink, false);
     while (true)
     {
-        currentTime = GetTickCount();
-        if (currentTime - lastTime >= 10) // 0.01秒刷新一帧
+        if (Status == GAMING)
         {
-            peekmessage(&action, EM_KEY); //获取消息
-            updateData(&action, hook);
-            updateGraph();
-            flushmessage();
-            lastTime = currentTime;
+            currentTime = GetTickCount();
+            if (currentTime - lastTime >= 10) // 0.01秒刷新一帧
+            {
+                peekmessage(&action, EM_KEY); //获取消息
+                updateData(hook);
+                updateGraph(goal, hook);
+                flushmessage();
+                lastTime = currentTime;
+            }
+        }
+        else if (Status == WIN)
+        {
+            EasyPutImage(0, 0, "img/win.jpg", getwidth(), getheight());
+            Sleep(3000);
+            Status = MAIN_MENU;
+            isNewGame = true;
+            break;
+        }
+        else if (Status == LOSE)
+        {
+
+            EasyPutImage(0, 0, "img/lose.jpg", getwidth(), getheight());
+            Sleep(3000);
+            Status = MAIN_MENU;
+            isNewGame = true;
+            break;
         }
     }
 }
 
-void updateData(ExMessage *msg, Hook *hook) //参数msg没用，记得删
+void updateData(Hook *hook)
 {
     if (hook->state == HOOK_EXTEND)
     {
@@ -92,16 +111,18 @@ void updateData(ExMessage *msg, Hook *hook) //参数msg没用，记得删
     }
 }
 
-void updateGraph()
+void updateGraph(int goal, Hook *hook)
 {
     BeginBatchDraw();
 
     EasyPutImage(0, 0, "img/gameBackground.jpg", getwidth(), getheight());
     drawMiner(updateMiner(hook, false));
-    displayGameTime(countGameTime(false));
+    displayGameTime(countGameTime(goal, false));
+    displayMoney(countMoney(0, false));
+    displayGoal(goal);
+    displayLevel(countLevel(0, false, false));
     drawMine(minelink, false);
     drawHook(hook);
-    // test();
 
     FlushBatchDraw();
 }

@@ -2,7 +2,7 @@
 #include "DataOperate.h"
 #include "GameEngine.h"
 
-GameStatus Status = MAIN_MENU; //初始化状态机
+GameStatus Status = MAIN_MENU; //初始化状态
 userData *user;
 
 int location[4][4] = { //记录主菜单按钮坐标
@@ -41,7 +41,7 @@ void gameLoop()
         case REGISTER:
             registerBox();
             break;
-        case GAME:
+        case GAMING:
             mainEngine();
             break;
         }

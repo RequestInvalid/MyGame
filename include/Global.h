@@ -12,15 +12,16 @@
 
 #define GAME_WIDTH 960
 #define GAME_HEIGHT 540
-
 //利用枚举来创造状态机
-typedef enum
+typedef enum GameStatus
 {
     MAIN_MENU,
-    GAME,
+    GAMING,
     LOGIN,
     REGISTER,
     RANK,
+    WIN,
+    LOSE,
     EXIT,
 } GameStatus;
 
@@ -33,7 +34,7 @@ typedef struct userData
     struct userData *next;
 } userData;
 
-//矿物
+/*矿物相关结构体*/
 typedef enum MineType
 {
     MAX_GOLD,
@@ -59,8 +60,9 @@ typedef struct MineLink
     struct MineLink *next;
 } MineLink;
 
+/*钩子相关结构体*/
 // 钩子状态枚举
-typedef enum
+typedef enum HookState
 {
     HOOK_ROTATE, // 钩子旋转
     HOOK_EXTEND, // 钩子伸长
@@ -69,16 +71,16 @@ typedef enum
 } HookState;
 
 // 钩子结构体
-typedef struct
+typedef struct Hook
 {
     int x, y, midX, midY, sizeX, sizeY; // 钩子位置
     float length;                       // 当前绳子长度
     float angle;                        // 旋转角度（角度制）
-    float speed;                        // 旋转速度
-    float extendSpeed;                  // 伸展速度
-    float backSpeed;                    // 收回速度
-    MineLink *mine;                     //抓到的矿物
-    HookState state;                    // 当前钩子状态
+    // float speed;                        // 旋转速度
+    float extendSpeed; // 伸展速度
+    float backSpeed;   // 收回速度
+    MineLink *mine;    //抓到的矿物
+    HookState state;   // 当前钩子状态
 } Hook;
 
 /*函数声明*/
