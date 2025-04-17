@@ -54,7 +54,6 @@ void mainMenu()
     ExMessage mouse;
     IMAGE img;
     SIZE textsize;
-    // FILE *file = fopen("log.txt", "w+"); //测试代码，用于输出鼠标坐标
     loadimage(&img, _T("img/startMenu.jpg"), getwidth(), getheight());
     putimage(0, 0, &img);
     LOGFONT f; //初始化字体格式
@@ -100,10 +99,5 @@ void mainMenu()
                 outtextxy(location[i][0], location[i][1], text[i]);
             }
         }
-        //测试用代码，用于输出鼠标左键时鼠标坐标
-        // if (mouse.message == WM_LBUTTONDOWN)
-        // {
-        //     fprintf(file, "%d, %d\n", mouse.x, mouse.y);
-        // }
     }
 }

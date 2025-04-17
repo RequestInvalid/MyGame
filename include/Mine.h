@@ -7,7 +7,7 @@
 int countGameTime(int goal, boolean isNextLevel);
 int countMoney(int addScore, boolean isNewGame);
 void setGoal(int *goal, MineLink *head, boolean isNewGame);
-int countLevel(int addLevel, boolean isNewGame, boolean isNextLevel);
+int countLevel(boolean isNewGame, boolean isNextLevel);
 MineLink *createMineLink(int count);
 void deleteMine(MineLink **head, MineLink *mine);
 MineLink *isTouchHook(Hook *hook, MineLink *head);

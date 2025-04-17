@@ -8,7 +8,7 @@ int randomInRange(int min, int max)
     return rand() % (max - min + 1) + min;
 }
 
-int countGameTime(int goal, boolean isNextLevel = false)
+int countGameTime(int goal, boolean isNextLevel)
 {
     /*计算游戏剩余时间*/
     static int gameTime;
@@ -32,6 +32,7 @@ int countGameTime(int goal, boolean isNextLevel = false)
         }
         else
         {
+            //判断游戏输赢
             if (countMoney(0, false) > goal)
             {
                 Status = WIN;
@@ -47,7 +48,7 @@ int countGameTime(int goal, boolean isNextLevel = false)
     return gameTime;
 }
 
-int countMoney(int addMoney, boolean isNewGame = false)
+int countMoney(int addMoney, boolean isNewGame)
 {
     /*计算得分逻辑*/
     static int money = 0;
@@ -73,10 +74,10 @@ void setGoal(int *goal, MineLink *head, boolean isNewGame)
         temp += ptr->mine.value;
         ptr = ptr->next;
     }
-    *goal += (0.6 * (temp / 10 * 10)); // 无法正确初始化
+    *goal = countMoney(0, false) + (int)(0.6 * (temp / 10 * 10));
 }
 
-int countLevel(int addLevel, boolean isNewGame = false, boolean isNextLevel = false)
+int countLevel(boolean isNewGame, boolean isNextLevel)
 {
     /*计算当前关卡*/
     static int level = 1;
@@ -270,8 +271,6 @@ void initMine(Mine *mine, MineType type)
 MineLink *createMineLink(int count)
 {
     /*创建矿物链表*/
-    srand(42); // 固定种子，保证随机数一致性
-
     MineLink *head = NULL;
     MineLink *tail = NULL;
 
@@ -339,7 +338,7 @@ void deleteMine(MineLink **head, MineLink *mine)
     }
 }
 
-void drawMine(MineLink *head, boolean isNewGame = false)
+void drawMine(MineLink *head, boolean isNewGame)
 {
     /*根据传入的矿物链表绘制矿物*/
     static IMAGE mineImg[5];

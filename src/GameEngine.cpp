@@ -6,7 +6,7 @@ extern userData *user;
 
 boolean isNewGame = true;
 Hook *hook = (Hook *)malloc(sizeof(Hook)); //创建钩子对象
-MineLink *minelink = createMineLink(20);   //随机生成矿物
+MineLink *minelink;                        //随机生成矿物
 int goal = 0;
 
 DWORD WINAPI detectKeyPress(LPVOID param)
@@ -24,26 +24,40 @@ DWORD WINAPI detectKeyPress(LPVOID param)
                 hook->state = HOOK_EXTEND;
             }
         }
-        // Sleep(10); // 减少 CPU 占用
+        Sleep(10); // 减少 CPU 占用
     }
     return 0;
 }
 
-void init(int goal, Hook *hook, MineLink *minelink)
+void init(int *goal, Hook *hook, MineLink **minelink)
 {
 
-    initHook(hook);
-    minelink = createMineLink(20); //生成矿物
-    countGameTime(0, isNewGame);
-    setGoal(&goal, minelink, isNewGame);
-    swangHook(hook, isNewGame);
-    exbandHook(hook, minelink, isNewGame);
-    backHook(hook, isNewGame);
-    updateMiner(hook, isNewGame);
-    drawMine(minelink, isNewGame);
     if (isNewGame)
     {
+        srand(42); //重设种子状态
+        initHook(hook);
+        *minelink = createMineLink(20); //生成矿物
+        countGameTime(0, true);
+        countMoney(0, isNewGame);
+        countLevel(isNewGame, false);
+        setGoal(goal, *minelink, isNewGame);
+        swangHook(hook, isNewGame);
+        exbandHook(hook, *minelink, isNewGame);
+        backHook(hook, isNewGame);
+        updateMiner(hook, isNewGame);
+        drawMine(*minelink, isNewGame);
         isNewGame = false;
+    }
+    else
+    {
+        initHook(hook);
+        *minelink = createMineLink(20); //生成矿物
+        setGoal(goal, *minelink, isNewGame);
+        countGameTime(0, true);
+        countLevel(isNewGame, true);
+        swangHook(hook, isNewGame);
+        exbandHook(hook, *minelink, isNewGame);
+        backHook(hook, isNewGame);
     }
 }
 
@@ -54,9 +68,7 @@ void mainEngine()
     DWORD currentTime, lastTime;
     HANDLE keyPressThread = CreateThread(NULL, 0, detectKeyPress, hook, 0, NULL); //创建线程检测按键事件
     lastTime = GetTickCount();
-    // setGoal(&goal, minelink, true);
-    init(goal, hook, minelink);
-    setGoal(&goal, minelink, false);
+    init(&goal, hook, &minelink); //初始化组件状态
     while (true)
     {
         if (Status == GAMING)
@@ -75,8 +87,7 @@ void mainEngine()
         {
             EasyPutImage(0, 0, "img/win.jpg", getwidth(), getheight());
             Sleep(3000);
-            Status = MAIN_MENU;
-            isNewGame = true;
+            Status = GAMING;
             break;
         }
         else if (Status == LOSE)
@@ -85,7 +96,7 @@ void mainEngine()
             EasyPutImage(0, 0, "img/lose.jpg", getwidth(), getheight());
             Sleep(3000);
             Status = MAIN_MENU;
-            isNewGame = true;
+            isNewGame = true; //更改新游戏状态为真
             break;
         }
     }
@@ -120,7 +131,7 @@ void updateGraph(int goal, Hook *hook)
     displayGameTime(countGameTime(goal, false));
     displayMoney(countMoney(0, false));
     displayGoal(goal);
-    displayLevel(countLevel(0, false, false));
+    displayLevel(countLevel(false, false));
     drawMine(minelink, false);
     drawHook(hook);
 
