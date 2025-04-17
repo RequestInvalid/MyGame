@@ -12,7 +12,7 @@
                 "${file}",
                 "${fileDirname}\\src\\Global.cpp",//手动添加编译文件
                 "${fileDirname}\\src\\LoginAndRegister.cpp",
-                "${fileDirname}\\src\\DataOperate.cpp",
+                "${fileDirname}\\src\\UserData.cpp",
                 "${fileDirname}\\src\\GameEngine.cpp",
                 "${fileDirname}\\src\\Hook.cpp",
                 "${fileDirname}\\src\\Mine.cpp",

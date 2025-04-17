@@ -59,6 +59,7 @@ void init(int *goal, Hook *hook, MineLink **minelink)
         exbandHook(hook, *minelink, isNewGame);
         backHook(hook, isNewGame);
     }
+    goalScene(*goal);
 }
 
 void mainEngine()
@@ -104,6 +105,7 @@ void mainEngine()
 
 void updateData(Hook *hook)
 {
+    /*更新游戏数据*/
     if (hook->state == HOOK_EXTEND)
     {
         exbandHook(hook, minelink, false);
@@ -124,6 +126,7 @@ void updateData(Hook *hook)
 
 void updateGraph(int goal, Hook *hook)
 {
+    /*更新画面*/
     BeginBatchDraw();
 
     EasyPutImage(0, 0, "img/gameBackground.jpg", getwidth(), getheight());
@@ -136,4 +139,21 @@ void updateGraph(int goal, Hook *hook)
     drawHook(hook);
 
     FlushBatchDraw();
+}
+
+void goalScene(int goal)
+{
+    LOGFONT f;
+    settextstyle(55, 0, _T("楷体"));
+    setbkmode(TRANSPARENT);
+    gettextstyle(&f);
+    f.lfQuality = ANTIALIASED_QUALITY;
+    f.lfWeight = FW_LIGHT;
+    settextcolor(RGB(0, 100, 0)); //设置金钱数量的颜色为深绿色
+    settextstyle(&f);
+    TCHAR str[6];
+    _stprintf(str, _T("$%d"), goal);
+    EasyPutImage(0, 0, "img/goal.jpg", getwidth(), getheight());
+    outtextxy(250, 230, str);
+    Sleep(2000);
 }

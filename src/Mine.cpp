@@ -105,8 +105,8 @@ void displayGameTime(int GameTime)
     f.lfWeight = FW_BOLD;
     settextcolor(BLACK);
     settextstyle(&f);
-    char str[3];
-    sprintf(str, "%d", GameTime);
+    TCHAR str[3];
+    _stprintf(str, _T("%d"), GameTime);
     outtextxy(890, 15, str);
 }
 
@@ -120,8 +120,8 @@ void displayMoney(int money)
     f.lfWeight = FW_BOLD;
     settextcolor(RGB(0, 100, 0)); //设置金钱数量的颜色为深绿色
     settextstyle(&f);
-    char str[6];
-    sprintf(str, "$%d", money);
+    TCHAR str[6];
+    _stprintf(str, _T("$%d"), money);
     outtextxy(90, 17, str);
 }
 
@@ -135,8 +135,8 @@ void displayGoal(int goal)
     f.lfWeight = FW_BOLD;
     settextcolor(RGB(255, 153, 0));
     settextstyle(&f);
-    char str[6];
-    sprintf(str, "$%d", goal);
+    TCHAR str[6];
+    _stprintf(str, _T("$%d"), goal);
     outtextxy(140, 60, str);
 }
 
@@ -150,8 +150,8 @@ void displayLevel(int level)
     f.lfWeight = FW_BOLD;
     settextcolor(BLACK);
     settextstyle(&f);
-    char str[3];
-    sprintf(str, "%d", level);
+    TCHAR str[3];
+    _stprintf(str, _T("%d"), level);
     outtextxy(860, 60, str);
 }
 

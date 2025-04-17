@@ -66,7 +66,7 @@ void loginBox()
             {
                 if (frame_status == USERNAME && name_length < 20)
                 {
-                    solidrectangle(351, 245, 351 + textwidth(charInRange(temp_name, 0, name_length)), 245 + textheight(charInRange(temp_name, 0, name_length)));
+                    solidrectangle(351, 245, 351 + textwidth((const char *)charInRange(temp_name, 0, name_length)), 245 + textheight((const char *)charInRange(temp_name, 0, name_length)));
                     if (action.vkcode >= 'A' && action.vkcode <= 'Z')
                     {
                         temp_name[name_length] = action.vkcode;
