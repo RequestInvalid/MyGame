@@ -14,8 +14,8 @@ int countGameTime(int goal, boolean isNextLevel)
     static int gameTime;
     if (isNextLevel == true)
     {
-        gameTime = 60;
-        return 0;
+        gameTime = 60; //设置游戏时间为60秒
+        return 60;
     }
     static DWORD currentTime, lastTime = 0;
     if (!lastTime)

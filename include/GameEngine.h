@@ -8,3 +8,4 @@ void mainEngine();
 void updateData(Hook *hook);
 void updateGraph(int goal, Hook *hook);
 void goalScene(int goal);
+void loseScene();

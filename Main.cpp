@@ -54,7 +54,7 @@ void mainMenu()
     ExMessage mouse;
     IMAGE img;
     SIZE textsize;
-    loadimage(&img, _T("img/startMenu.jpg"), getwidth(), getheight());
+    loadimage(&img, _T("img/startMenu.jpg"), GAME_WIDTH, GAME_HEIGHT);
     putimage(0, 0, &img);
     LOGFONT f; //初始化字体格式
     settextstyle(35, 0, _T("楷体"));

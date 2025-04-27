@@ -86,24 +86,14 @@ void mainEngine()
         }
         else if (Status == WIN)
         {
-            EasyPutImage(0, 0, "img/win.jpg", getwidth(), getheight());
+            EasyPutImage(0, 0, "img/win.jpg", GAME_WIDTH, GAME_HEIGHT);
             Sleep(3000);
             Status = GAMING;
             break;
         }
         else if (Status == LOSE)
         {
-
-            EasyPutImage(0, 0, "img/lose.jpg", getwidth(), getheight());
-            Sleep(3000);
-            //更新用户的最高记录
-            if (user->highest_score < countMoney(0, false))
-            {
-                userData *head = loadUserData(); //加载用户数据
-                updateUserHighestScore(head, user, countMoney(0, false));
-            }
-            Status = MAIN_MENU;
-            isNewGame = true; //更改新游戏状态为真
+            loseScene();
             break;
         }
     }
@@ -135,7 +125,7 @@ void updateGraph(int goal, Hook *hook)
     /*更新画面*/
     BeginBatchDraw();
 
-    EasyPutImage(0, 0, "img/gameBackground.jpg", getwidth(), getheight());
+    EasyPutImage(0, 0, "img/gameBackground.jpg", GAME_WIDTH, GAME_HEIGHT);
     drawMiner(updateMiner(hook, false));
     displayGameTime(countGameTime(goal, false));
     displayMoney(countMoney(0, false));
@@ -159,7 +149,37 @@ void goalScene(int goal)
     settextstyle(&f);
     TCHAR str[6];
     _stprintf(str, _T("$%d"), goal);
-    EasyPutImage(0, 0, "img/goal.jpg", getwidth(), getheight());
+    EasyPutImage(0, 0, "img/goal.jpg", GAME_WIDTH, GAME_HEIGHT);
     outtextxy(250, 230, str);
     Sleep(2000);
+}
+
+void loseScene()
+{
+    /*失败场景*/
+    EasyPutImage(0, 0, "img/lose.jpg", GAME_WIDTH, GAME_HEIGHT);
+    Sleep(2000);
+    //更新用户的最高记录
+    if (user->highest_score < countMoney(0, false))
+    {
+        user->highest_score = countMoney(0, false);
+        userData *head = loadUserData();
+        updateUserHighestScore(head, user, countMoney(0, false)); //更新用户的最高分
+    }
+    EasyPutImage(0, 0, "img/endScore.png", GAME_WIDTH, GAME_HEIGHT);
+    LOGFONT f;
+    settextstyle(30, 0, _T("楷体"));
+    setbkmode(TRANSPARENT);
+    gettextstyle(&f);
+    f.lfQuality = ANTIALIASED_QUALITY;
+    f.lfWeight = FW_LIGHT;
+    settextcolor(RED);
+    TCHAR scoreStr[20];
+    _stprintf(scoreStr, _T("您的分数：%d"), countMoney(0, false));
+    outtextxy(250, 210, scoreStr);
+    _stprintf(scoreStr, _T("您的最高分：%d"), user->highest_score);
+    outtextxy(250, 260, scoreStr);
+    Sleep(5000);
+    Status = MAIN_MENU;
+    isNewGame = true;
 }
