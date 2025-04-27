@@ -1,4 +1,5 @@
 #include "Global.h"
+#include "UserData.h"
 #include "Hook.h"
 #include "Mine.h"
 

@@ -66,7 +66,7 @@ void loginBox()
             {
                 if (frame_status == USERNAME && name_length < 20)
                 {
-                    solidrectangle(351, 245, 351 + textwidth((const char *)charInRange(temp_name, 0, name_length)), 245 + textheight((const char *)charInRange(temp_name, 0, name_length)));
+                    solidrectangle(351, 245, 351 + textwidth(charInRange(temp_name, 0, name_length)), 245 + textheight(charInRange(temp_name, 0, name_length)));
                     if (action.vkcode >= 'A' && action.vkcode <= 'Z')
                     {
                         temp_name[name_length] = action.vkcode;
@@ -133,8 +133,8 @@ void loginBox()
             {
                 if (name_length > 0 && passport_length > 0)
                 {
-                    userPtr = searchUserData(head, charInRange(temp_name, 0, name_length));
-                    if (userPtr != NULL && !strcmp(userPtr->pasport, charInRange(temp_passport, 0, passport_length)))
+                    userPtr = searchUserData(head, (char *)charInRange(temp_name, 0, name_length));
+                    if (userPtr != NULL && !strcmp(userPtr->pasport, (char *)charInRange(temp_passport, 0, passport_length)))
                     {
                         user = userPtr;
                         Status = GAMING; //登录成功跳转
@@ -270,8 +270,8 @@ void registerBox()
             {
                 if (name_length > 0 && passport_length > 0)
                 {
-                    strcpy(user_input.username, charInRange(temp_name, 0, name_length));
-                    strcpy(user_input.pasport, charInRange(temp_passport, 0, passport_length));
+                    strcpy(user_input.username, (const char *)charInRange(temp_name, 0, name_length));
+                    strcpy(user_input.pasport, (const char *)charInRange(temp_passport, 0, passport_length));
                     head = loadUserData();
                     addUserData(head, user_input);
                     Status = MAIN_MENU; //注册成功切换到主菜单界面

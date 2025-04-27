@@ -2,8 +2,8 @@
 
 userData *loadUserData()
 {
-    /*加载用户数据为链表，返回头指针(可能还有问题？)*/
-    userData *head, *ptr, *temp;
+    /*加载用户数据，重建为链表，返回头指针*/
+    userData *head, *ptr;
     FILE *user_file = fopen("user.dat", "rb");
     if (!user_file)
     {
@@ -33,6 +33,7 @@ userData *loadUserData()
 
 userData *searchUserData(userData *head, char *name)
 {
+    /*在链表中查找指定用户名的用户数据，返回指针*/
     if (head == NULL)
     {
         return NULL;
@@ -70,5 +71,42 @@ void addUserData(userData *head, userData data)
     }
     ptr->next = temp;
     fwrite(temp, sizeof(userData), 1, user_file);
+    fclose(user_file);
+}
+
+void updateUserHighestScore(userData *head, userData *user, int new_highest_score)
+{
+    if (head == NULL)
+    {
+        return;
+    }
+    // 找到对应的用户
+    userData *ptr = head;
+    while (ptr != NULL)
+    {
+        if (strcmp(ptr->username, user->username) == 0)
+        {
+            // 更新最高分
+            ptr->highest_score = new_highest_score;
+            break;
+        }
+        ptr = ptr->next;
+    }
+    if (ptr == NULL)
+    {
+        return;
+    }
+    // 将更新后的链表写入文件
+    FILE *user_file = fopen("user.dat", "wb");
+    if (!user_file)
+    {
+        return;
+    }
+    ptr = head;
+    while (ptr != NULL)
+    {
+        fwrite(ptr, sizeof(userData), 1, user_file);
+        ptr = ptr->next;
+    }
     fclose(user_file);
 }

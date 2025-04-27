@@ -13,17 +13,17 @@ int determineMouse(ExMessage msg, int startX, int startY, int endX, int endY)
     }
 }
 
-char *charInRange(char *str, int start, int end)
+TCHAR *charInRange(char *str, int start, int end)
 {
     /*·µ»ØÖ¸¶¨·¶Î§ÄÚµÄ×Ö·û´®*/
     if (end - start <= 0)
     {
         //·µ»Ø¿Õ×Ö·û´®
-        char *emptyStr = (char *)malloc(1);
+        TCHAR *emptyStr = (TCHAR *)malloc(1);
         emptyStr[0] = '\0';
         return emptyStr;
     }
-    char *output = (char *)malloc(sizeof(char) * (end - start + 1));
+    TCHAR *output = (TCHAR *)malloc(sizeof(char) * (end - start + 1));
     for (int i = 0; i < end - start; i++)
     {
         output[i] = str[start + i];

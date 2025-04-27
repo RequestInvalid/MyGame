@@ -85,7 +85,7 @@ typedef struct Hook
 
 /*函数声明*/
 int determineMouse(ExMessage msg, int startX, int startY, int endX, int endY);                                           //检测鼠标坐标是否在某一矩形内
-char *charInRange(char *str, int start, int end);                                                                        //返回指定范围内的字符串
+TCHAR *charInRange(char *str, int start, int end);                                                                       //返回指定范围内的字符串
 void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, int widthDest, int heightDest, UINT transparentcolor); //绘制透明图片
 void EasyPutImage(int x, int y, const char *img, int sizeX, int sizeY);
 float calculateDistance(int x1, int y1, int x2, int y2);

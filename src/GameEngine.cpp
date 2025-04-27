@@ -6,7 +6,7 @@ extern userData *user;
 
 boolean isNewGame = true;
 Hook *hook = (Hook *)malloc(sizeof(Hook)); //创建钩子对象
-MineLink *minelink;                        //随机生成矿物
+MineLink *minelink;
 int goal = 0;
 
 DWORD WINAPI detectKeyPress(LPVOID param)
@@ -96,6 +96,12 @@ void mainEngine()
 
             EasyPutImage(0, 0, "img/lose.jpg", getwidth(), getheight());
             Sleep(3000);
+            //更新用户的最高记录
+            if (user->highest_score < countMoney(0, false))
+            {
+                userData *head = loadUserData(); //加载用户数据
+                updateUserHighestScore(head, user, countMoney(0, false));
+            }
             Status = MAIN_MENU;
             isNewGame = true; //更改新游戏状态为真
             break;
