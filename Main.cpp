@@ -1,9 +1,10 @@
 #include "LoginAndRegister.h"
+#include "Rank.h"
 #include "UserData.h"
 #include "GameEngine.h"
 
 GameStatus Status = MAIN_MENU; //初始化状态
-userData *user;
+userData *user;                //用户数据指针
 
 int location[4][4] = { //记录主菜单按钮坐标
     {240, 60, 310, 93},
@@ -41,6 +42,9 @@ void gameLoop()
         case REGISTER:
             registerBox();
             break;
+        case RANK:
+            displayRank();
+            break;
         case GAMING:
             mainEngine();
             break;
@@ -53,42 +57,44 @@ void mainMenu()
     /*主菜单*/
     ExMessage mouse;
     IMAGE img;
-    SIZE textsize;
     loadimage(&img, _T("img/startMenu.jpg"), GAME_WIDTH, GAME_HEIGHT);
-    putimage(0, 0, &img);
     LOGFONT f; //初始化字体格式
     settextstyle(35, 0, _T("楷体"));
     setbkmode(TRANSPARENT); //设置字体背景透明
     gettextstyle(&f);
     f.lfQuality = ANTIALIASED_QUALITY; //抗锯齿
-    f.lfWeight = FW_BOLD;              //粗体
+    f.lfWeight = 1000;                 //粗体
     settextcolor(BROWN);               //棕色字体
     settextstyle(&f);
     while (1)
     {
+        BeginBatchDraw();
+        putimage(0, 0, &img);
         mouse = getmessage();
-        for (int i = 0; i < 4; i++) //检测鼠标是否与文字重叠
+        for (int i = 0; i < 4; i++)
         {
             if (determineMouse(mouse, location[i][0], location[i][1], location[i][2], location[i][3]))
             {
                 settextcolor(BLACK);
-                outtextxy(location[i][0], location[i][1], text[i]);
-                settextcolor(BROWN);
                 if (mouse.message == WM_LBUTTONUP) //检测鼠标是否按下文字
                 {
                     switch (i)
                     {
                     case 0:
                         Status = LOGIN; //设置状态为登录
+                        EndBatchDraw();
                         return;
                     case 1:
                         Status = REGISTER; //设置状态为登录注册
+                        EndBatchDraw();
                         return;
                     case 2:
                         Status = RANK;
+                        EndBatchDraw();
                         return;
                     case 3:
                         Status = EXIT; //设置装态为退出，暂时只有一个此类终止状态
+                        EndBatchDraw();
                         return;
                     }
                 }
@@ -96,8 +102,10 @@ void mainMenu()
             else
             {
                 settextcolor(BROWN);
-                outtextxy(location[i][0], location[i][1], text[i]);
             }
+            outtextxy(location[i][0], location[i][1], text[i]);
         }
+
+        FlushBatchDraw();
     }
 }

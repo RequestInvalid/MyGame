@@ -13,10 +13,4 @@ void deleteMine(MineLink **head, MineLink *mine);
 MineLink *isTouchHook(Hook *hook, MineLink *head);
 void moveHookAndMine(Hook *hook, MineLink *mine, MineLink **head);
 
-void displayGameTime(int GameTime);
-void displayMoney(int score);
-void displayGoal(int goal);
-void displayLevel(int level);
-void drawMine(MineLink *head, boolean isNewGame);
-
 #endif

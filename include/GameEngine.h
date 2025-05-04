@@ -2,6 +2,7 @@
 #include "UserData.h"
 #include "Hook.h"
 #include "Mine.h"
+#include "Display.h"
 
 void init(int *goal, Hook *hook, MineLink **minelink);
 void mainEngine();

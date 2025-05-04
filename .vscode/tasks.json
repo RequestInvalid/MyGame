@@ -10,12 +10,7 @@
                 "include",//include文件夹找头文件
                 "-g",
                 "${file}",
-                "${fileDirname}\\src\\Global.cpp",//手动添加编译文件
-                "${fileDirname}\\src\\LoginAndRegister.cpp",
-                "${fileDirname}\\src\\UserData.cpp",
-                "${fileDirname}\\src\\GameEngine.cpp",
-                "${fileDirname}\\src\\Hook.cpp",
-                "${fileDirname}\\src\\Mine.cpp",
+                "${fileDirname}\\src\\*",//添加编译文件
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "-L",
