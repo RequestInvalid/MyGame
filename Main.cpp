@@ -6,12 +6,12 @@
 GameStatus Status = MAIN_MENU; //初始化状态
 userData *user;                //用户数据指针
 
-int location[4][4] = { //记录主菜单按钮坐标
+static int location[4][4] = { //记录主菜单按钮坐标
     {240, 60, 310, 93},
     {240, 113, 310, 146},
     {220, 166, 326, 199},
     {240, 219, 310, 252}};
-TCHAR text[][12] = {_T("登录"), _T("注册"), _T("排行榜"), _T("退出")}; //记录主菜单按钮文本
+static TCHAR text[][12] = {_T("登录"), _T("注册"), _T("排行榜"), _T("退出")}; //记录主菜单按钮文本
 
 void gameLoop(); //游戏循环体，切换游戏窗口状态
 void mainMenu(); //主菜单
@@ -63,14 +63,14 @@ void mainMenu()
     setbkmode(TRANSPARENT); //设置字体背景透明
     gettextstyle(&f);
     f.lfQuality = ANTIALIASED_QUALITY; //抗锯齿
-    f.lfWeight = 1000;                 //粗体
+    f.lfWeight = FW_BOLD;              //粗体
     settextcolor(BROWN);               //棕色字体
     settextstyle(&f);
     while (1)
     {
         BeginBatchDraw();
         putimage(0, 0, &img);
-        mouse = getmessage();
+        peekmessage(&mouse, EM_MOUSE); //获取鼠标消息
         for (int i = 0; i < 4; i++)
         {
             if (determineMouse(mouse, location[i][0], location[i][1], location[i][2], location[i][3]))
@@ -104,8 +104,8 @@ void mainMenu()
                 settextcolor(BROWN);
             }
             outtextxy(location[i][0], location[i][1], text[i]);
+            flushmessage(EM_MOUSE);
         }
-
         FlushBatchDraw();
     }
 }

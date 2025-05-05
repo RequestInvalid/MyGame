@@ -7,7 +7,7 @@ void displayRank()
     /* 展示排行榜 */
     cleardevice();
     IMAGE rankBackground;
-    loadimage(&rankBackground, _T("img/rankBackground.jpg"), GAME_WIDTH, GAME_HEIGHT);
+    loadimage(&rankBackground, _T("img/rank.jpg"), GAME_WIDTH, GAME_HEIGHT);
     putimage(0, 0, &rankBackground);
 
     // 设置字体样式
@@ -24,7 +24,7 @@ void displayRank()
     userData *head = loadUserData();
     if (head == NULL)
     {
-        outtextxy(300, 200, _T("暂无玩家数据"));
+        outtextxy(385, 200, _T("暂无玩家数据"));
         Sleep(3000);
         Status = MAIN_MENU;
         return;
@@ -59,7 +59,6 @@ void displayRank()
 
     // 显示排行榜
     int y = 100;
-    outtextxy(300, 50, _T("排行榜"));
     ptr = sortedList;
     int rank = 1;
     TCHAR buffer[50];

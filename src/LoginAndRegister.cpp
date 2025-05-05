@@ -10,6 +10,34 @@ typedef enum frameStatus
     PASSPORT,
 } frameStatus;
 
+TCHAR getUserNameString(char *name, int start, int end)
+{
+    static DWORD currentTime, lastTime = 0;
+    static boolean showCursor = true;                                   // 控制光标显示状态
+    TCHAR *result = (TCHAR *)malloc((end - start + 2) * sizeof(TCHAR)); // 分配内存
+
+    // 截取指定范围内的字符串
+    int i;
+    for (i = start; i < end && name[i] != '\0'; i++)
+    {
+        result[i - start] = name[i];
+    }
+    result[i - start] = '\0'; // 添加字符串结束符
+    currentTime = GetTickCount();
+    if (currentTime - lastTime >= 300)
+    {
+        showCursor = !showCursor;
+        lastTime = currentTime;
+    }
+    if (showCursor)
+    {
+        result[i - start] = '|';
+        result[i - start + 1] = '\0'; // 添加字符串结束符
+    }
+
+    return *result;
+}
+
 void loginBox()
 {
     /*设置登录框*/
@@ -268,7 +296,7 @@ void registerBox()
             }
             else if (action.vkcode == VK_RETURN) //输入ENTER时存储用户名及密码
             {
-                if (name_length > 0 && passport_length > 0)
+                if (name_length > 0 && passport_length > 0 && !searchUserData(head, (char *)charInRange(temp_name, 0, name_length)))
                 {
                     strcpy(user_input.username, (const char *)charInRange(temp_name, 0, name_length));
                     strcpy(user_input.pasport, (const char *)charInRange(temp_passport, 0, passport_length));
