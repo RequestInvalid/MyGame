@@ -5,7 +5,7 @@ extern GameStatus Status;
 void displayRank()
 {
     /* 展示排行榜 */
-    cleardevice();
+    // cleardevice();
     IMAGE rankBackground;
     loadimage(&rankBackground, _T("img/rank.jpg"), GAME_WIDTH, GAME_HEIGHT);
     putimage(0, 0, &rankBackground);
@@ -21,7 +21,7 @@ void displayRank()
     settextstyle(&f);
 
     // 加载用户数据
-    userData *head = loadUserData();
+    UserData *head = loadUserData();
     if (head == NULL)
     {
         outtextxy(385, 200, _T("暂无玩家数据"));
@@ -31,11 +31,11 @@ void displayRank()
     }
 
     // 将用户数据按最高分排序
-    userData *sortedList = NULL;
-    userData *ptr = head;
+    UserData *sortedList = NULL;
+    UserData *ptr = head;
     while (ptr != NULL)
     {
-        userData *newNode = (userData *)malloc(sizeof(userData));
+        UserData *newNode = (UserData *)malloc(sizeof(UserData));
         *newNode = *ptr;
         newNode->next = NULL;
 
@@ -46,7 +46,7 @@ void displayRank()
         }
         else
         {
-            userData *temp = sortedList;
+            UserData *temp = sortedList;
             while (temp->next != NULL && temp->next->highest_score >= newNode->highest_score)
             {
                 temp = temp->next;
@@ -74,7 +74,7 @@ void displayRank()
     // 释放排序链表
     while (sortedList != NULL)
     {
-        userData *temp = sortedList;
+        UserData *temp = sortedList;
         sortedList = sortedList->next;
         free(temp);
     }

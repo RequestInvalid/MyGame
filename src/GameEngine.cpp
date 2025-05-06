@@ -1,8 +1,7 @@
 #include "GameEngine.h"
-#pragma comment(lib, "MSIMG32.LIB") //导入外部依赖项
 
 extern GameStatus Status;
-extern userData *user;
+extern UserData *user;
 
 boolean isNewGame = true;
 Hook *hook = (Hook *)malloc(sizeof(Hook)); //创建钩子对象
@@ -22,6 +21,7 @@ DWORD WINAPI detectKeyPress(LPVOID param)
             if (hook->state == HOOK_ROTATE) // 仅在钩子处于旋转状态时处理
             {
                 hook->state = HOOK_EXTEND;
+                PlaySound(_T("sounds/extend.wav"), NULL, SND_FILENAME | SND_ASYNC);
             }
         }
         Sleep(10); // 减少 CPU 占用
@@ -42,7 +42,7 @@ void init(int *goal, Hook *hook, MineLink **minelink)
         countLevel(isNewGame, false);
         setGoal(goal, *minelink, isNewGame);
         swangHook(hook, isNewGame);
-        exbandHook(hook, *minelink, isNewGame);
+        extendHook(hook, *minelink, isNewGame);
         backHook(hook, isNewGame);
         updateMiner(hook, isNewGame);
         drawMine(*minelink, isNewGame);
@@ -56,7 +56,7 @@ void init(int *goal, Hook *hook, MineLink **minelink)
         countGameTime(0, true);
         countLevel(isNewGame, true);
         swangHook(hook, isNewGame);
-        exbandHook(hook, *minelink, isNewGame);
+        extendHook(hook, *minelink, isNewGame);
         backHook(hook, isNewGame);
     }
     goalScene(*goal);
@@ -87,7 +87,8 @@ void mainEngine()
         else if (Status == WIN)
         {
             EasyPutImage(0, 0, "img/win.jpg", GAME_WIDTH, GAME_HEIGHT);
-            Sleep(3000);
+            PlaySound(_T("sounds/win.wav"), NULL, SND_FILENAME | SND_ASYNC);
+            Sleep(4000);
             Status = GAMING;
             break;
         }
@@ -104,7 +105,7 @@ void updateData(Hook *hook)
     /*更新游戏数据*/
     if (hook->state == HOOK_EXTEND)
     {
-        exbandHook(hook, minelink, false);
+        extendHook(hook, minelink, false);
     }
     else if (hook->state == HOOK_BACK)
     {
@@ -151,6 +152,7 @@ void goalScene(int goal)
     _stprintf(str, _T("$%d"), goal);
     EasyPutImage(0, 0, "img/goal.jpg", GAME_WIDTH, GAME_HEIGHT);
     outtextxy(250, 230, str);
+    PlaySound(_T("sounds/goal.wav"), NULL, SND_FILENAME | SND_ASYNC);
     Sleep(2000);
 }
 
@@ -163,7 +165,7 @@ void loseScene()
     if (user->highest_score < countMoney(0, false))
     {
         user->highest_score = countMoney(0, false);
-        userData *head = loadUserData();
+        UserData *head = loadUserData();
         updateUserHighestScore(head, user, countMoney(0, false)); //更新用户的最高分
     }
     EasyPutImage(0, 0, "img/endScore.png", GAME_WIDTH, GAME_HEIGHT);

@@ -46,11 +46,28 @@ void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, int widthDest,
 void EasyPutImage(int x, int y, const char *img, int sizeX, int sizeY)
 {
     IMAGE image;
-    loadimage(&image, img, sizeX, sizeY);
+    loadimage(&image, (TCHAR *)img, sizeX, sizeY);
     putimage(x, y, &image);
 }
 
 float calculateDistance(int x1, int y1, int x2, int y2)
 {
     return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+}
+
+DWORD WINAPI PlaySoundThread(LPVOID lpParam)
+{
+    TCHAR *path = (TCHAR *)lpParam;
+
+    // 播放音频（异步播放 + 阻塞当前线程）
+    PlaySound((TCHAR *)path, NULL, SND_FILENAME | SND_ASYNC);
+
+    return 0;
+}
+
+// 调用函数：播放音频（非阻塞主线程）
+void PlaySoundAsync(const char *audioPath)
+{
+    // 创建一个线程播放音频
+    CreateThread(NULL, 0, PlaySoundThread, (LPVOID)audioPath, 0, NULL);
 }

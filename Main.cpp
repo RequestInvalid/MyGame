@@ -2,9 +2,11 @@
 #include "Rank.h"
 #include "UserData.h"
 #include "GameEngine.h"
+#include <windows.h>
+#include <mmsystem.h>
 
 GameStatus Status = MAIN_MENU; //初始化状态
-userData *user;                //用户数据指针
+UserData *user;                //用户数据指针
 
 static int location[4][4] = { //记录主菜单按钮坐标
     {240, 60, 310, 93},
@@ -37,7 +39,7 @@ void gameLoop()
             mainMenu();
             break;
         case LOGIN:
-            loginBox();
+            testLogin();
             break;
         case REGISTER:
             registerBox();
@@ -73,8 +75,14 @@ void mainMenu()
         peekmessage(&mouse, EM_MOUSE); //获取鼠标消息
         for (int i = 0; i < 4; i++)
         {
+            static int lastChoice = -1;
             if (determineMouse(mouse, location[i][0], location[i][1], location[i][2], location[i][3]))
             {
+                if (lastChoice != i)
+                {
+                    lastChoice = i;
+                    PlaySound(_T("sounds/slip.wav"), NULL, SND_ASYNC | SND_FILENAME);
+                }
                 settextcolor(BLACK);
                 if (mouse.message == WM_LBUTTONUP) //检测鼠标是否按下文字
                 {
@@ -93,7 +101,7 @@ void mainMenu()
                         EndBatchDraw();
                         return;
                     case 3:
-                        Status = EXIT; //设置装态为退出，暂时只有一个此类终止状态
+                        Status = EXIT; //设置装态为退出
                         EndBatchDraw();
                         return;
                     }
@@ -104,8 +112,8 @@ void mainMenu()
                 settextcolor(BROWN);
             }
             outtextxy(location[i][0], location[i][1], text[i]);
-            flushmessage(EM_MOUSE);
         }
+        flushmessage(EM_MOUSE);
         FlushBatchDraw();
     }
 }

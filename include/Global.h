@@ -10,6 +10,8 @@
 #include <conio.h>
 #include <math.h>
 
+#pragma comment(lib, "winmm.lib")
+
 #define GAME_WIDTH 960
 #define GAME_HEIGHT 540
 //利用枚举来创造状态机
@@ -26,13 +28,13 @@ typedef enum GameStatus
 } GameStatus;
 
 //用户数据结构体
-typedef struct userData
+typedef struct UserData
 {
     char username[21];
     char pasport[19];
     int highest_score = 0;
-    struct userData *next;
-} userData;
+    struct UserData *next;
+} UserData;
 
 /*矿物相关结构体*/
 typedef enum MineType
@@ -89,5 +91,6 @@ TCHAR *charInRange(char *str, int start, int end);                              
 void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, int widthDest, int heightDest, UINT transparentcolor); //绘制透明图片
 void EasyPutImage(int x, int y, const char *img, int sizeX, int sizeY);
 float calculateDistance(int x1, int y1, int x2, int y2);
+void PlaySoundAsync(const char *audioPath);
 
 #endif

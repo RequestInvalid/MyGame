@@ -18,6 +18,7 @@
                 "-lgdi32",  // 需要 Windows GDI 库
                 "-lMsimg32",
                 "-leasyx",
+                "-lwinmm",
             ],
             "options": {
                 "cwd": "${fileDirname}"

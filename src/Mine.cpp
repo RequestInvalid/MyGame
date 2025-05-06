@@ -305,12 +305,12 @@ void moveHookAndMine(Hook *hook, MineLink *mine, MineLink **head)
     {
         if (calculateDistance(hook->midX, hook->midY, 483, 88) <= 50)
         {
+            PlaySound(_T("sounds/addMoney.wav"), NULL, SND_FILENAME | SND_ASYNC);
             hook->state = HOOK_ROTATE;
             countMoney(mine->mine.value, false);
             deleteMine(head, mine);
             hook->length = 35;
             hook->backSpeed = 10;
-            // initHook(hook); // ÖØÖÃ¹³×Ó×´Ì¬
         }
         else
         {

@@ -56,7 +56,7 @@ void swangHook(Hook *hook, boolean isNewGame = false)
     }
 }
 
-void exbandHook(Hook *hook, MineLink *head, boolean isNewGame = false)
+void extendHook(Hook *hook, MineLink *head, boolean isNewGame = false)
 {
     /*钩子伸展和收回的逻辑*/
     static DWORD currentTime, lastTime = 0;
@@ -80,6 +80,14 @@ void exbandHook(Hook *hook, MineLink *head, boolean isNewGame = false)
         }
         else if (touchMine != NULL)
         {
+            if (touchMine->mine.type == STONE)
+            {
+                PlaySound(_T("sounds/getStone.wav"), NULL, SND_FILENAME | SND_ASYNC);
+            }
+            else
+            {
+                PlaySound(_T("sounds/getMine.wav"), NULL, SND_FILENAME | SND_ASYNC);
+            }
             hook->backSpeed = touchMine->mine.backSpeed;
             hook->mine = touchMine;
             hook->state = HOOK_CATCH;
@@ -117,7 +125,6 @@ void backHook(Hook *hook, boolean isNewGame = false)
             hook->state = HOOK_ROTATE;
             hook->length = 35;
             hook->backSpeed = 10;
-            // initHook(hook); // 重置钩子状态
         }
         else
         {
