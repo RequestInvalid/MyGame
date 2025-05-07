@@ -12,9 +12,11 @@ DWORD WINAPI detectKeyPress(LPVOID param)
 {
     /*多线程检测按键事件的线程*/
     Hook *hook = (Hook *)param; // 获取传入的钩子对象指针
+    ExMessage mouse;
 
     while (true)
     {
+        peekmessage(&mouse, EM_MOUSE);
         // 检测键盘按下事件
         if (GetAsyncKeyState(VK_DOWN) & 0x8000) // 检测下方向键是否按下
         {
@@ -24,6 +26,14 @@ DWORD WINAPI detectKeyPress(LPVOID param)
                 PlaySound(_T("sounds/extend.wav"), NULL, SND_FILENAME | SND_ASYNC);
             }
         }
+        else if (GetAsyncKeyState(VK_ESCAPE) & 0x8000 || (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && determineMouse(mouse, 740, 30, 810, 80)))
+        {
+            if (Status == GAMING)
+            {
+                Status = PAUSE;
+            }
+        }
+        flushmessage(EM_MOUSE);
         Sleep(10); // 减少 CPU 占用
     }
     return 0;
@@ -80,9 +90,13 @@ void mainEngine()
                 peekmessage(&action, EM_KEY); //获取消息
                 updateData(hook);
                 updateGraph(goal, hook);
-                flushmessage();
+                flushmessage(EM_KEY);
                 lastTime = currentTime;
             }
+        }
+        else if (Status == PAUSE)
+        {
+            gamePause();
         }
         else if (Status == WIN)
         {
@@ -95,6 +109,10 @@ void mainEngine()
         else if (Status == LOSE)
         {
             loseScene();
+            break;
+        }
+        else if (Status == MAIN_MENU)
+        {
             break;
         }
     }
@@ -126,7 +144,10 @@ void updateGraph(int goal, Hook *hook)
     /*更新画面*/
     BeginBatchDraw();
 
+    IMAGE img;
+    loadimage(&img, _T("img/pauseButton.png"), 101, 75);
     EasyPutImage(0, 0, "img/gameBackground.jpg", GAME_WIDTH, GAME_HEIGHT);
+    TransparentImage(NULL, 740, 30, &img, 70, 50, BLACK);
     drawMiner(updateMiner(hook, false));
     displayGameTime(countGameTime(goal, false));
     displayMoney(countMoney(0, false));
@@ -184,4 +205,70 @@ void loseScene()
     Sleep(5000);
     Status = MAIN_MENU;
     isNewGame = true;
+}
+
+void gamePause()
+{
+    ExMessage mouse;
+    LOGFONT f; //初始化字体格式
+    int lastChoice = -1;
+
+    settextstyle(35, 0, _T("楷体"));
+    setbkmode(TRANSPARENT); //设置字体背景透明
+    gettextstyle(&f);
+    f.lfQuality = ANTIALIASED_QUALITY; //抗锯齿
+    f.lfWeight = FW_BOLD;              //粗体
+    settextcolor(BROWN);               //棕色字体
+    settextstyle(&f);
+    while (Status == PAUSE)
+    {
+        BeginBatchDraw();
+        EasyPutImage(0, 0, "img/pause.png", GAME_WIDTH, GAME_HEIGHT);
+        peekmessage(&mouse); //获取鼠标消息
+        outtextxy(400, 200, _T("继续游戏"));
+        outtextxy(380, 280, _T("返回主菜单"));
+        if (determineMouse(mouse, 400, 200, 540, 233))
+        {
+            if (lastChoice != 1)
+            {
+                lastChoice = 1;
+                PlaySound(_T("sounds/slip.wav"), NULL, SND_ASYNC | SND_FILENAME);
+            }
+            settextcolor(BLACK);
+            outtextxy(400, 200, _T("继续游戏"));
+            settextcolor(BROWN);
+            outtextxy(380, 280, _T("返回主菜单"));
+            if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+            {
+                Status = GAMING;
+            }
+        }
+        else if (determineMouse(mouse, 380, 280, 555, 313))
+        {
+            if (lastChoice != 2)
+            {
+                lastChoice = 2;
+                PlaySound(_T("sounds/slip.wav"), NULL, SND_ASYNC | SND_FILENAME);
+            }
+            settextcolor(BLACK);
+            outtextxy(380, 280, _T("返回主菜单"));
+            settextcolor(BROWN);
+            outtextxy(400, 200, _T("继续游戏"));
+            if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+            {
+                Status = MAIN_MENU;
+                isNewGame = true;
+                break;
+            }
+        }
+        else
+        {
+            lastChoice = -1;
+            settextcolor(BROWN);
+            outtextxy(400, 200, _T("继续游戏"));
+            outtextxy(380, 280, _T("返回主菜单"));
+        }
+        flushmessage(EM_MOUSE);
+        FlushBatchDraw();
+    }
 }

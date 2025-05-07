@@ -39,7 +39,7 @@ void gameLoop()
             mainMenu();
             break;
         case LOGIN:
-            testLogin();
+            loginBox();
             break;
         case REGISTER:
             registerBox();
@@ -85,7 +85,7 @@ void mainMenu()
                     PlaySound(_T("sounds/slip.wav"), NULL, SND_ASYNC | SND_FILENAME);
                 }
                 settextcolor(BLACK);
-                if (mouse.message == WM_LBUTTONUP) //检测鼠标是否按下文字
+                if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) //检测鼠标是否按下文字
                 {
                     switch (i)
                     {

@@ -18,10 +18,11 @@
 typedef enum GameStatus
 {
     MAIN_MENU,
-    GAMING,
     LOGIN,
     REGISTER,
     RANK,
+    GAMING,
+    PAUSE,
     WIN,
     LOSE,
     EXIT,
@@ -91,6 +92,7 @@ TCHAR *charInRange(char *str, int start, int end);                              
 void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, int widthDest, int heightDest, UINT transparentcolor); //»æÖÆÍ¸Ã÷Í¼Æ¬
 void EasyPutImage(int x, int y, const char *img, int sizeX, int sizeY);
 float calculateDistance(int x1, int y1, int x2, int y2);
+bool isKeyPressed(ExMessage *action);
 void PlaySoundAsync(const char *audioPath);
 
 #endif

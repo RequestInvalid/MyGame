@@ -37,22 +37,7 @@ TCHAR *getUserNameString(char *name, int start, int end)
     return result;
 }
 
-bool isKeyPressed(ExMessage *action)
-{
-    static bool isDown = false;
-    if (action->message == WM_KEYDOWN && !isDown)
-    {
-        isDown = true;
-    }
-    else if (action->message == WM_KEYUP && isDown)
-    {
-        isDown = false;
-        return true;
-    }
-    return false;
-}
-
-void testLogin()
+void loginBox()
 {
     FrameStatus frameStatus = NONE;
     ExMessage action;
@@ -70,13 +55,14 @@ void testLogin()
     settextcolor(BLACK);
     settextstyle(&f);
     setfillcolor(WHITE);
+
     while (true)
     {
         peekmessage(&action, EM_MOUSE | EM_KEY); //获取鼠标消息
         BeginBatchDraw();
         EasyPutImage(305, 75, "img/login.png", 350, 400);
         /*检测左键按下*/
-        if (action.message == WM_LBUTTONUP)
+        if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
         {
             if (determineMouse(action, 606, 103, 637, 133) || determineMouse(action, 505, 400, 595, 440)) //退出按钮
             {
@@ -233,7 +219,7 @@ void registerBox()
         BeginBatchDraw();
         EasyPutImage(305, 75, "img/register.png", 350, 400);
         /*检测左键按下*/
-        if (action.message == WM_LBUTTONUP)
+        if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
         {
             if (determineMouse(action, 606, 103, 637, 133) || determineMouse(action, 505, 400, 595, 440)) //退出按钮
             {
@@ -332,6 +318,7 @@ void registerBox()
                     strcpy(user.pasport, (const char *)charInRange(temp_passport, 0, passport_length));
                     head = loadUserData();
                     addUserData(head, user);
+                    EndBatchDraw();
                     Status = MAIN_MENU; //注册成功切换到主菜单界面
                     break;
                 }

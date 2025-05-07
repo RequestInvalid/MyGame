@@ -3,6 +3,7 @@
         "*.embeddedhtml": "html",
         "locale": "cpp",
         "xlocale": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "system_error": "cpp"
     }
 }
