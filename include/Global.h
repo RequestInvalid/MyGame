@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <tchar.h>
-#include <Windows.h>
+// #include <Windows.h>
 #include <graphics.h>
 #include <conio.h>
 #include <math.h>

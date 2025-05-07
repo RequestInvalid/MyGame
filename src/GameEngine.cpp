@@ -3,7 +3,7 @@
 extern GameStatus Status;
 extern UserData *user;
 
-boolean isNewGame = true;
+bool isNewGame = true;
 Hook *hook = (Hook *)malloc(sizeof(Hook)); //创建钩子对象
 MineLink *minelink;
 int goal = 0;

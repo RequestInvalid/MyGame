@@ -2,8 +2,6 @@
 #include "Rank.h"
 #include "UserData.h"
 #include "GameEngine.h"
-#include <windows.h>
-#include <mmsystem.h>
 
 GameStatus Status = MAIN_MENU; //初始化状态
 UserData *user;                //用户数据指针
@@ -22,6 +20,8 @@ int main()
 {
     /*主函数*/
     initgraph(GAME_WIDTH, GAME_HEIGHT);
+    HWND hwnd = GetHWnd();
+    SetWindowText(hwnd, "黄金矿工");
     gameLoop();
     closegraph();
     return 0;
@@ -59,8 +59,9 @@ void mainMenu()
     /*主菜单*/
     ExMessage mouse;
     IMAGE img;
-    loadimage(&img, _T("img/startMenu.jpg"), GAME_WIDTH, GAME_HEIGHT);
     LOGFONT f; //初始化字体格式
+
+    loadimage(&img, _T("img/startMenu.jpg"), GAME_WIDTH, GAME_HEIGHT);
     settextstyle(35, 0, _T("楷体"));
     setbkmode(TRANSPARENT); //设置字体背景透明
     gettextstyle(&f);
@@ -68,7 +69,7 @@ void mainMenu()
     f.lfWeight = FW_BOLD;              //粗体
     settextcolor(BROWN);               //棕色字体
     settextstyle(&f);
-    while (1)
+    while (true)
     {
         BeginBatchDraw();
         putimage(0, 0, &img);

@@ -14,7 +14,7 @@ void initHook(Hook *hook)
     hook->state = HOOK_ROTATE;
 }
 
-void swangHook(Hook *hook, boolean isNewGame = false)
+void swangHook(Hook *hook, bool isNewGame = false)
 {
     static DWORD currentTime, lastTime = 0;
     static float dAngle = 2.0f; // 钩子旋转速度
@@ -56,7 +56,7 @@ void swangHook(Hook *hook, boolean isNewGame = false)
     }
 }
 
-void extendHook(Hook *hook, MineLink *head, boolean isNewGame = false)
+void extendHook(Hook *hook, MineLink *head, bool isNewGame = false)
 {
     /*钩子伸展和收回的逻辑*/
     static DWORD currentTime, lastTime = 0;
@@ -104,7 +104,7 @@ void extendHook(Hook *hook, MineLink *head, boolean isNewGame = false)
     }
 }
 
-void backHook(Hook *hook, boolean isNewGame = false)
+void backHook(Hook *hook, bool isNewGame = false)
 {
     /*钩子收回的逻辑*/
     static DWORD currentTime, lastTime = 0;
@@ -138,11 +138,11 @@ void backHook(Hook *hook, boolean isNewGame = false)
     }
 }
 
-IMAGE *updateMiner(Hook *hook, boolean isNewGame = false)
+IMAGE *updateMiner(Hook *hook, bool isNewGame = false)
 {
     static DWORD currentTime, lastTime = 0;
     static IMAGE minerUp, minerDown;
-    static boolean isUp = true;
+    static bool isUp = true;
     if (isNewGame)
     {
         loadimage(&minerUp, _T("img/minerup.png"));
