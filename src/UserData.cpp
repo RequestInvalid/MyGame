@@ -74,8 +74,10 @@ void addUserData(UserData *head, UserData data)
     fclose(user_file);
 }
 
-void updateUserHighestScore(UserData *head, UserData *user, int new_highest_score)
+void updateUserHighestScore(int newHighestScore, UserData *user)
 {
+    /*更新用户的最高分数*/
+    UserData *head = loadUserData();
     if (head == NULL)
     {
         return;
@@ -87,7 +89,7 @@ void updateUserHighestScore(UserData *head, UserData *user, int new_highest_scor
         if (strcmp(ptr->username, user->username) == 0)
         {
             // 更新最高分
-            ptr->highest_score = new_highest_score;
+            ptr->highestScore = newHighestScore;
             break;
         }
         ptr = ptr->next;
@@ -102,6 +104,46 @@ void updateUserHighestScore(UserData *head, UserData *user, int new_highest_scor
     {
         return;
     }
+    ptr = head;
+    while (ptr != NULL)
+    {
+        fwrite(ptr, sizeof(UserData), 1, user_file);
+        ptr = ptr->next;
+    }
+    fclose(user_file);
+}
+
+void saveGame(int lastLevel, int lastScore, UserData **user)
+{
+    /*存档*/
+    if (user == NULL)
+        return;
+
+    (*user)->lastLevel = lastLevel;
+
+    // 读取所有用户数据到链表
+    UserData *head = loadUserData();
+    if (head == NULL)
+        return;
+
+    // 找到对应用户并更新lastLevel
+    UserData *ptr = head;
+    while (ptr != NULL)
+    {
+        if (strcmp(ptr->username, (*user)->username) == 0)
+        {
+            ptr->lastLevel = lastLevel;
+            ptr->lastScore = lastScore;
+            break;
+        }
+        ptr = ptr->next;
+    }
+
+    // 保存链表到文件
+    FILE *user_file = fopen("user.dat", "wb");
+    if (!user_file)
+        return;
+
     ptr = head;
     while (ptr != NULL)
     {

@@ -15,7 +15,7 @@
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
                 "-L",
                 "C:\\Program Files\\mingw64\\lib",
-                "-lgdi32",  // 需要 Windows GDI 库
+                "-lgdi32",  // 需要 Windows GDI 库, 下方表示引入的lib
                 "-lMsimg32",
                 "-leasyx",
                 "-lwinmm",

@@ -39,7 +39,7 @@ void gameLoop()
             mainMenu();
             break;
         case LOGIN:
-            testLogin();
+            loginBox();
             break;
         case REGISTER:
             registerBox();
@@ -58,10 +58,9 @@ void mainMenu()
 {
     /*主菜单*/
     ExMessage mouse;
-    IMAGE img;
+    int lastChoice = -1;
     LOGFONT f; //初始化字体格式
 
-    loadimage(&img, _T("img/startMenu.jpg"), GAME_WIDTH, GAME_HEIGHT);
     settextstyle(35, 0, _T("楷体"));
     setbkmode(TRANSPARENT); //设置字体背景透明
     gettextstyle(&f);
@@ -69,14 +68,14 @@ void mainMenu()
     f.lfWeight = FW_BOLD;              //粗体
     settextcolor(BROWN);               //棕色字体
     settextstyle(&f);
+
     while (true)
     {
         BeginBatchDraw();
-        putimage(0, 0, &img);
+        EasyPutImage(0, 0, "img/startMenu.jpg", GAME_WIDTH, GAME_HEIGHT);
         peekmessage(&mouse, EM_MOUSE); //获取鼠标消息
         for (int i = 0; i < 4; i++)
         {
-            static int lastChoice = -1;
             if (determineMouse(mouse, location[i][0], location[i][1], location[i][2], location[i][3]))
             {
                 if (lastChoice != i)
@@ -85,7 +84,7 @@ void mainMenu()
                     PlaySound(_T("sounds/slip.wav"), NULL, SND_ASYNC | SND_FILENAME);
                 }
                 settextcolor(BLACK);
-                if (mouse.message == WM_LBUTTONUP) //检测鼠标是否按下文字
+                if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) //检测鼠标是否按下文字
                 {
                     switch (i)
                     {

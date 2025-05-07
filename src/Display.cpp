@@ -18,6 +18,7 @@ void displayGameTime(int GameTime)
 
 void displayMoney(int money)
 {
+    /*显示分数*/
     LOGFONT f;
     settextstyle(35, 0, _T("楷体"));
     setbkmode(TRANSPARENT);
@@ -33,6 +34,7 @@ void displayMoney(int money)
 
 void displayGoal(int goal)
 {
+    /*显示目标分数*/
     LOGFONT f;
     settextstyle(35, 0, _T("楷体"));
     setbkmode(TRANSPARENT);
@@ -48,6 +50,7 @@ void displayGoal(int goal)
 
 void displayLevel(int level)
 {
+    /*显示关卡数*/
     LOGFONT f;
     settextstyle(35, 0, _T("楷体"));
     setbkmode(TRANSPARENT);

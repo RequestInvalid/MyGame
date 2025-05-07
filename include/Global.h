@@ -5,12 +5,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <tchar.h>
-// #include <Windows.h>
+#include <Windows.h>
 #include <graphics.h>
 #include <conio.h>
 #include <math.h>
 
-#pragma comment(lib, "winmm.lib")
+// #pragma comment(lib, "winmm.lib")
 
 #define GAME_WIDTH 960
 #define GAME_HEIGHT 540
@@ -18,10 +18,11 @@
 typedef enum GameStatus
 {
     MAIN_MENU,
-    GAMING,
     LOGIN,
     REGISTER,
     RANK,
+    GAMING,
+    PAUSE,
     WIN,
     LOSE,
     EXIT,
@@ -32,7 +33,9 @@ typedef struct UserData
 {
     char username[21];
     char pasport[19];
-    int highest_score = 0;
+    int highestScore = 0;
+    int lastLevel = 0;
+    int lastScore = 0;
     struct UserData *next;
 } UserData;
 
@@ -91,6 +94,7 @@ TCHAR *charInRange(char *str, int start, int end);                              
 void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, int widthDest, int heightDest, UINT transparentcolor); //»æÖÆÍ¸Ã÷Í¼Æ¬
 void EasyPutImage(int x, int y, const char *img, int sizeX, int sizeY);
 float calculateDistance(int x1, int y1, int x2, int y2);
-void PlaySoundAsync(const char *audioPath);
+bool isKeyPressed(ExMessage *action);
+// void PlaySoundAsync(const char *audioPath);
 
 #endif

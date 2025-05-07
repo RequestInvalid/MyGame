@@ -39,7 +39,7 @@ void displayRank()
         *newNode = *ptr;
         newNode->next = NULL;
 
-        if (sortedList == NULL || newNode->highest_score > sortedList->highest_score)
+        if (sortedList == NULL || newNode->highestScore > sortedList->highestScore)
         {
             newNode->next = sortedList;
             sortedList = newNode;
@@ -47,7 +47,7 @@ void displayRank()
         else
         {
             UserData *temp = sortedList;
-            while (temp->next != NULL && temp->next->highest_score >= newNode->highest_score)
+            while (temp->next != NULL && temp->next->highestScore >= newNode->highestScore)
             {
                 temp = temp->next;
             }
@@ -64,7 +64,7 @@ void displayRank()
     TCHAR buffer[50];
     while (ptr != NULL && rank <= 10) // 只显示前 10 名
     {
-        _stprintf(buffer, _T("第 %d 名: %s - 最高分: %d"), rank, ptr->username, ptr->highest_score);
+        _stprintf(buffer, _T("第 %d 名: %s - 最高分: %d"), rank, ptr->username, ptr->highestScore);
         outtextxy(200, y, buffer);
         y += 40;
         rank++;
