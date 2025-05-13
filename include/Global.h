@@ -95,6 +95,5 @@ void TransparentImage(IMAGE *dstimg, int x, int y, IMAGE *srcimg, int widthDest,
 void EasyPutImage(int x, int y, const char *img, int sizeX, int sizeY);
 float calculateDistance(int x1, int y1, int x2, int y2);
 bool isKeyPressed(ExMessage *action);
-// void PlaySoundAsync(const char *audioPath);
 
 #endif
